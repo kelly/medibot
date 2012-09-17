@@ -1,0 +1,18 @@
+<div id="container"></div>
+
+<script>
+  window.Medibot = {
+    Models: {},
+    Collections: {},
+    Views: {}
+  };
+</script>
+<script type='text/javascript' src="/javascripts/medibot-templates.min.js"></script>
+<script type='text/javascript' src="/javascripts/medibot-client.min.js"></script>
+<script>
+	(function ($) {
+		hud = new Medibot.Views.Hud;
+	  $('#container').append(hud.render().el);
+	})(jQuery);
+
+</script>

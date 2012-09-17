@@ -1,0 +1,204 @@
+@import "compass";
+@import "animation";
+
+$support-for-original-webkit-gradients : false;
+$legacy-support-for-ie                 : false;
+$experimental-support-for-opera        : false;
+$experimental-support-for-khtml        : false;
+$experimental-support-for-microsoft    : false;
+$experimental-support-for-mozilla      : true;
+
+$highlight-color: #3bd2cd;
+
+$bg-color: #101b1d;
+$bg-dark-color: darken($bg-color, 20%);
+$bg-light-color: mix($bg-color, $highlight-color, 98%);
+
+$font-color: #dcd6ca;
+$font-dark-color: darken($font-color, 20%);
+$font-large-size: 1.8em;
+
+$diamond-dark-2-pattern: '/images/diamond_dark_texture_2_128.png';
+
+
+@font-face {
+	font-family: 'uweb-webfont';
+  src: url('/fonts/uweb-webfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'uweb-webfont';
+  src: url('/fonts/uweb-bold-webfont.svg') format('svg');
+  font-weight: bold;
+}
+
+@mixin toggleable {
+  opacity: 0;
+  &.active, &.animated { opacity: 1; }
+}
+
+@mixin fixed-footer {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1000;
+	width: 100%;
+}
+
+span, p {
+	@include single-text-shadow(rgba(0,0,0,0.2), 0, 1px, 0px);
+}
+html * {
+  @include box-sizing(border-box);
+}
+body {
+  background: $bg-color;
+	overflow: hidden;
+	font-family: uweb-webfont;
+	color: $font-color;
+	margin: 0;
+	text-transform: uppercase;
+}
+canvas {
+	display: block;
+}
+#toolbar {
+  opacity: 0.9;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  overflow: hidden;
+  min-height: 30px;
+  @include clearfix;
+  border: 1px solid rgba(0,0,0,0.5);
+  @include box-shadow(rgba(255,255,255,0.2) 0 1px 0 inset, rgba(0,0,0,0.5) 0 -3px 2px);
+  @include background(url($diamond-dark-2-pattern) repeat, linear-gradient(lighten(saturate($bg-color, 5%), 5%), darken($bg-color, 10%)));
+}
+#container {
+	@include clearfix;
+}
+.video {
+  margin: 2em auto;
+  max-width: 90%;
+  display: block;
+}
+.section {
+	// background: $bg-light-color;
+	min-width: 60px;
+	min-height: 60px;
+	padding: 10px;
+	@include box-sizing(border-box);
+	margin: 0.5em;
+	float: left;
+	-webkit-transform: rotateY(0); 
+	-webkit-backface-visibility: hidden;
+}
+.media, .media-list li { 
+  overflow: hidden;
+  _overflow: visible; 
+  zoom: 1; 
+  margin: 10px; 
+  .avatar, .img, .icon { float: left; margin-right: 10px; img { display: block; } }
+  .content {
+    overflow:hidden; 
+    _overflow:visible; 
+    zoom:1; 
+  }
+  .menu { float: right; margin-left: 10px; }
+}
+.notification {
+	background: transparentize($highlight-color, 0.2);
+	font-size: $font-large-size;
+	line-height: 1.5em;
+	color: white;
+	margin: 0;
+	@include toggleable;
+	@include fixed-footer;
+}
+
+.circular-graph {
+	position: relative;	
+	.digit {
+		position: absolute;
+		text-align: center;
+		top: 50%;
+		width: 100%;
+		font-size: 123.1%;
+		margin-top: -0.5em;
+		margin-left: -.5em;
+		font-weight: bold;
+	}
+}
+.animated {
+  @include animation(1s ease both); 
+  &.slow { @include animation-duration(3s);     }
+  &.fast { @include animation-duration(0.350s); }
+  &.none { @include animation(blank 0.01s 1); }
+}
+.foldInDown, .foldOutUp {
+  @include animation-timing-function(cubic-bezier(0.000, 0.025, 0.500, 0.250));
+  @include perspective(1000px);
+  @include transform-origin(0, 0);
+  @include transform-style(preseve-3d);
+}
+
+$backface: 
+  flip, test;
+
+$animations:
+  fadeInUp, 
+  fadeOutDown, 
+  foldInUp,
+  foldOutDown;
+
+@each $anim in $animations {
+  .#{$anim} {
+    @if index($backface, $anim) {
+      @include backface-visibility(visible); }
+    @if $anim == "swing" {
+      @include transform-origin(top, center); }
+    @include animation-name($anim); 
+  } 
+}
+
+@include keyframes(fadeInUp) {
+  0% {
+    @include translateY(20px);
+    opacity: 0; }
+  100% {
+    @include translateY(0);
+    opacity: 1; } }
+
+@include keyframes(fadeOutDown) {
+  0% {
+    @include translateY(0);
+    opacity: 1; }
+  100% {
+    @include translateY(20px);
+    opacity: 0; } }
+
+@include keyframes(foldInUp) {
+  0% {
+  	@include create-transform($perspective: 1000px, $rotate-x: 90deg, $origin-x: 0, $rotate-z: 0deg, $origin-y: 0, $trans-y: .75em);
+    // @include simple-transform($skew-x: -90deg, $trans-y: -.75em);
+    background: $bg-color;
+    height: 0;
+  }
+  100% {
+  	@include create-transform($perspective: 1000px, $rotate-x: 0deg, $origin-x: 0, $rotate-z: 0deg, $origin-y: 0, $trans-y: 0em);
+    // @include transform(translateY(0), rotateX(0deg));
+    background: $highlight-color;
+    height: auto;
+  }  
+}
+
+@include keyframes(foldOutDown) {
+  0% {
+  	opacity: 1;
+  }
+  100% {
+  	opacity: 0;
+  }  
+}

@@ -1,0 +1,63 @@
+Medibot.Views ||= {}
+
+class Medibot.Views.Sonar extends Medibot.Views.RaphaelBase
+
+  className: 'sonar-graph section'
+
+  draw: ->
+    scanner = @model.get('scanner')
+    ping = @model.get('ping')
+
+    if ping.distance < ping.max 
+      point = @paper.rect((ping.distance / ping.max) * @options.radius, @center - @options.lineWidth, 5, 5)
+        .rotate(scanner.angle, @center, @center - @options.lineWidth)
+        .attr 
+          fill: @colors.highlight2
+          stroke: false
+
+      point.animate
+        opacity: 0
+      , 5000, @options.animation, ->
+        point.remove()
+
+    @core.animate 
+      'stroke-width' : 50
+      'stroke-opacity': 0
+    , 500, @options.animation, ->
+      @attr
+        'stroke-opacity' : 1
+        'stroke-width' : 0
+
+    @beam.animate
+      transform: "R#{scanner.angle},#{@center},#{@center - @options.lineWidth}"
+    , 1000
+
+  render: -> 
+    super
+
+    @paper.setSize @center * 2, @center
+
+    # beam
+    scanner = @model.get('scanner')
+    range = scanner.range
+    steps = scanner.steps
+
+    @beam = @paper.sector(@center, @center - @options.lineWidth, @options.radius, range[1] - steps, range[1]).attr
+      fill: @colors.transparent  
+      stroke: false
+
+    # source
+    @core = @paper.sector(@center, @center - @options.lineWidth, 5, range[0], range[1]).attr
+      fill: @colors.highlight
+      stroke: @colors.highlight
+      'stroke-width': 0
+      'stroke-opacity': 0.2
+
+    # grid
+    for sector in _.range(@options.radius, 10, -20)
+      @paper.sector(@center, @center - @options.lineWidth, sector, range[0], range[1]).attr
+        stroke: @colors.bg
+        'stroke-width': 1
+        'stroke-opacity': 1
+
+    @
