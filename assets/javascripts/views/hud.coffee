@@ -25,11 +25,14 @@ class Medibot.Views.Hud extends Medibot.Views.Base
 
     @renderTemplate {}
 
-    @$toolbar = @$('#toolbar')
+    @$toolbar = @$('.toolbar')
+    @$video = @$('.video-container')
 
     @renderChild new Medibot.Views.Sensor(
       model: @sensorModel
-      radius: 30
+      radius: 20
+      digit: true
+      label: 'Battery'
     ), @$toolbar
 
     @renderChild new Medibot.Views.NotificationFooter 
@@ -38,8 +41,9 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     @renderChild new Medibot.Views.Sonar(
       model: @sonarModel
       lineWidth: 1
-      radius: 60
+      radius: 90
       digit: false
+      label: 'Sonar'
     ), @$toolbar
 
     @renderChild new Medibot.Views.BlockGraph(
@@ -52,12 +56,14 @@ class Medibot.Views.Hud extends Medibot.Views.Base
       direction: 'right'
     ), @$toolbar
 
-    @renderChild new Medibot.Views.Joystick
+    @renderChild new Medibot.Views.Joystick(
       model: @joystickModel
-      width: 340
-      height: 260
+      div: '.video-container'
+      width: 640
+      height: 320
       lineWidth: 1
       digit: false
+    ), @$video
 
     @renderChild new Medibot.Views.Compass(
       model: @sensorModel

@@ -4,9 +4,7 @@ _ = require 'underscore'
 util = require 'util' 
 compulsive = require 'compulsive'
 EventEmitter = require('events').EventEmitter
-Sonar = require '../lib/sonar.js'
-Camera = require '../lib/camera.js'
-MotorController = require '../lib/motor-controller.js'
+medibot = require '../lib/medibot.js'
 
 class Bot extends EventEmitter
 
@@ -18,15 +16,15 @@ class Bot extends EventEmitter
   constructor: (opts = {}) ->
     @autonomous = opts.autonomous || false
 
-    @motors = new MotorController
+    @motors = new medibot.Motors
       speed: opts.speed || 100
       right: [3, 11]
       left: [5, 6]
 
+    @sonar   = new medibot.Sonar()
+    @camera  = new medibot.Camera()
     @battery = new five.Battery pin: 'A0'
     @compass = new five.Magnetometer()
-    @sonar   = new Sonar()
-    @camera  = new Camera()
 
     @battery.on 'warning', =>
       @stop 'warning: low power: #{@value}'
@@ -104,4 +102,4 @@ class Bot extends EventEmitter
 ["wait", "loop", "repeat", "queue"].forEach (api) ->
   Bot::[api] = compulsive[api]
 
-module.exports.Bot = Bot
+module.exports = Bot

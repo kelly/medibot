@@ -1,11 +1,11 @@
+EventEmitter = require('events').EventEmitter
 five = require 'johnny-five'
 __ = require 'johnny-five/lib/fn.js'
 _ = require 'underscore' 
 util = require 'util' 
 compulsive = require 'compulsive'
-EventEmitter = require('events').EventEmitter
 
-class MotorController extends EventEmitter
+class Motors extends EventEmitter
 
   isMoving: false
   isTurning: false
@@ -44,3 +44,5 @@ class MotorController extends EventEmitter
   stop: ->
     @move 0, 0
     @status 'stopped'
+
+module.exports = Motors

@@ -254,10 +254,20 @@
       return _.defaults(this.options, {
         animation: "<>",
         lineWidth: 8,
-        digit: true
+        digit: false,
+        label: false
       });
     },
+    resize: function(width, height) {
+      this.paper.clear();
+      this.options.width = this.width;
+      this.options.height = this.height;
+      return this.render();
+    },
     render: function() {
+      if (this.options.label) {
+        this.$el.append("<h3 class='section-label'>" + this.options.label + "</h3>");
+      }
       if (this.options.radius) {
         this.center = this.options.radius + this.options.lineWidth;
         this.paper = Raphael(this.el, this.center * 2, this.center * 2);
@@ -482,10 +492,13 @@
 
     Hud.prototype.render = function() {
       this.renderTemplate({});
-      this.$toolbar = this.$('#toolbar');
+      this.$toolbar = this.$('.toolbar');
+      this.$video = this.$('.video-container');
       this.renderChild(new Medibot.Views.Sensor({
         model: this.sensorModel,
-        radius: 30
+        radius: 20,
+        digit: true,
+        label: 'Battery'
       }), this.$toolbar);
       this.renderChild(new Medibot.Views.NotificationFooter({
         collection: this.notifications
@@ -493,8 +506,9 @@
       this.renderChild(new Medibot.Views.Sonar({
         model: this.sonarModel,
         lineWidth: 1,
-        radius: 60,
-        digit: false
+        radius: 90,
+        digit: false,
+        label: 'Sonar'
       }), this.$toolbar);
       this.renderChild(new Medibot.Views.BlockGraph({
         model: this.sensorModel,
@@ -507,11 +521,12 @@
       }), this.$toolbar);
       this.renderChild(new Medibot.Views.Joystick({
         model: this.joystickModel,
-        width: 340,
-        height: 260,
+        div: '.video-container',
+        width: 640,
+        height: 320,
         lineWidth: 1,
         digit: false
-      }));
+      }), this.$video);
       this.renderChild(new Medibot.Views.Compass({
         model: this.sensorModel,
         lineWidth: 1,
@@ -553,15 +568,22 @@
       return Joystick.__super__.constructor.apply(this, arguments);
     }
 
-    Joystick.prototype.className = 'joystick section';
+    Joystick.prototype.className = 'joystick';
 
     Joystick.prototype.initialize = function(options) {
+      var $parent,
+        _this = this;
       this.options = options != null ? options : {};
-      return _.defaults(this.options, {
+      $parent = $('.video-container');
+      _.defaults(this.options, {
         animation: "<>",
         lineWidth: 8,
         digit: true,
         frequency: 100
+      });
+      return $(window).on('resize', function() {
+        $parent = $(_this.options.div);
+        return _this.resize($parent.width(), $parent.height());
       });
     };
 
@@ -695,7 +717,7 @@
       ping = this.model.get('ping');
       if (ping.distance < ping.max) {
         point = this.paper.rect((ping.distance / ping.max) * this.options.radius, this.center - this.options.lineWidth, 5, 5).rotate(scanner.angle, this.center, this.center - this.options.lineWidth).attr({
-          fill: this.colors.highlight2,
+          fill: this.colors.highlight,
           stroke: false
         });
         point.animate({
@@ -735,7 +757,7 @@
         'stroke-width': 0,
         'stroke-opacity': 0.2
       });
-      _ref = _.range(this.options.radius, 10, -20);
+      _ref = _.range(this.options.radius, 10, -10);
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         sector = _ref[_i];
         this.paper.sector(this.center, this.center - this.options.lineWidth, sector, range[0], range[1]).attr({

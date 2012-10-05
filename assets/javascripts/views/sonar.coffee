@@ -12,7 +12,7 @@ class Medibot.Views.Sonar extends Medibot.Views.RaphaelBase
       point = @paper.rect((ping.distance / ping.max) * @options.radius, @center - @options.lineWidth, 5, 5)
         .rotate(scanner.angle, @center, @center - @options.lineWidth)
         .attr 
-          fill: @colors.highlight2
+          fill: @colors.highlight
           stroke: false
 
       point.animate
@@ -54,7 +54,7 @@ class Medibot.Views.Sonar extends Medibot.Views.RaphaelBase
       'stroke-opacity': 0.2
 
     # grid
-    for sector in _.range(@options.radius, 10, -20)
+    for sector in _.range(@options.radius, 10, -10)
       @paper.sector(@center, @center - @options.lineWidth, sector, range[0], range[1]).attr
         stroke: @colors.bg
         'stroke-width': 1

@@ -20,3 +20,5 @@ class Camera extends EventEmitter
     for servo in [@pan, @tilt]
       if (pos[_i] <= servo.last.degrees - 5) || (pos[_i] => servo.last.degrees + 5)
         servo.move (pos[_i] * 90) + 90
+
+module.exports = Camera

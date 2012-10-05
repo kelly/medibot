@@ -1,7 +1,3 @@
-/**
- * grunt
- * CoffeeScript example
- */
 module.exports = function(grunt){
 
   grunt.initConfig({
@@ -56,5 +52,4 @@ module.exports = function(grunt){
 
   grunt.loadTasks('tasks');
   grunt.registerTask('default', 'coffee min concat compass cssmin ok');
-  // grunt.registerTask('compass', '');
 };

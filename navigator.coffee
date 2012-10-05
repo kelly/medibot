@@ -1,6 +1,6 @@
 five = require 'johnny-five'
 util = require 'util' 
-medibot = require './lib/bot.js'
+medibot = require './lib/medibot.js'
 express = require 'express'
 app = express.createServer()
 
@@ -16,11 +16,9 @@ app.configure(() ->
   app.set 'views', "#{__dirname}/assets/templates"
   app.use express.logger()
   app.use express.bodyParser()
-  app.use express.cookieParser()
   app.use app.router
   app.use express.methodOverride()
   app.use(express.static(__dirname + '/public'))
-  app.use(express.compiler({ src: "#{__dirname}/assets/stylesheets", enable: ['sass'] }))
   hbsPrecompiler = require('handlebars-precompiler')
   hbsPrecompiler.watchDir(
     __dirname + "/assets/templates",
@@ -32,14 +30,14 @@ app.configure(() ->
 app.get '/', (req, res) ->
   res.render 'index',
     locals:
-      title: 'Home'
+      title: 'medibot'
 
+# arduino connected code
 # board = new five.Board()
 
 # board.on "ready", ->
 
-#   bot = new medibot.Bot 
-#     autonomous: true
+#   bot = new medibot.Bot()
 
 #   io.sockets.on "connection", (client) ->
 
@@ -50,7 +48,10 @@ app.get '/', (req, res) ->
 
 #     bot.on 'read', ->
 #       client.emit 'read', bot.last
-
+    
+#     client.on 'control:move', (pos) ->
+#       console.log pos
+#       bot.camera.move pos
 
 # testing code
 io.sockets.on "connection", (client) ->
@@ -70,12 +71,10 @@ io.sockets.on "connection", (client) ->
           max: 50
     angle += 20
   , 1000
-
   client.on 'control:move', (pos) ->
     console.log pos
+
     
 unless module.parent
   app.listen 3001
   console.log "Server started on port " + 3001
-
-

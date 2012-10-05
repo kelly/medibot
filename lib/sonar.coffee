@@ -37,3 +37,5 @@ class Sonar extends EventEmitter
   scan: ->
     @scanner.step @steps
     @isScanning = true
+
+  module.exports = Sonar

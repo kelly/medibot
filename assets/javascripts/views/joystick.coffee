@@ -5,14 +5,20 @@ Medibot.fn.constrain = (x, lower, upper)  ->
   (if x <= upper and x >= lower then x else ((if x > upper then upper else lower)))
 
 class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
-  className: 'joystick section'
+  className: 'joystick'
 
   initialize: (@options = {}) ->
+    $parent = $('.video-container')
+
     _.defaults @options,
       animation: "<>"
       lineWidth: 8
       digit: true
       frequency: 100
+
+    $(window).on 'resize', =>
+      $parent = $(@options.div)
+      @resize $parent.width(), $parent.height()
 
   start: =>
     @control.animate
