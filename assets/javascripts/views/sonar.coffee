@@ -10,7 +10,7 @@ class Medibot.Views.Sonar extends Medibot.Views.RaphaelBase
 
     if ping.distance < ping.max 
       point = @paper.rect((ping.distance / ping.max) * @options.radius, @center - @options.lineWidth, 5, 5)
-        .rotate(scanner.angle, @center, @center - @options.lineWidth)
+        .rotate(scanner.degrees, @center, @center - @options.lineWidth)
         .attr 
           fill: @colors.highlight
           stroke: false
@@ -29,7 +29,7 @@ class Medibot.Views.Sonar extends Medibot.Views.RaphaelBase
         'stroke-width' : 0
 
     @beam.animate
-      transform: "R#{scanner.angle},#{@center},#{@center - @options.lineWidth}"
+      transform: "R#{scanner.degrees},#{@center},#{@center - @options.lineWidth}"
     , 1000
 
   render: -> 

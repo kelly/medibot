@@ -7,6 +7,9 @@ Medibot.fn.constrain = (x, lower, upper)  ->
 class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
   className: 'joystick'
 
+  events:
+    'click .button' : 'sourceChange'
+
   initialize: (@options = {}) ->
     $parent = $('.video-container')
 
@@ -37,8 +40,8 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
     dx = Medibot.fn.constrain dx, -hWidth, hWidth
     dy = Medibot.fn.constrain dy, -hHeight, hHeight
 
-    pos = [(dx / hWidth), (dy / hHeight)]
-    @model.set pos
+    pos = x: (dx / hWidth), y: (dy / hHeight)
+    @model.set pos: pos
 
     @control.attr
       cx: @cx + dx
@@ -52,8 +55,15 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
       fill: @colors.highlight
     , 200, 'backOut'
 
+  sourceChange: (evt) ->
+    @model.set(sourceOn: $('.buttons li').index $(evt.target).parent())
+
   render: ->
     super
+
+    sources = @model.get 'sources'
+    @$el.append "<ul class='buttons'><li><a href='#' class='button #{sources[0]}-button'>
+                 #{sources[0]}</a></li><li><a href='#' class='button #{sources[1]}-button'>#{sources[1]}</a></li></ul>"
 
     @bg = @paper.rect(0, 0, @options.width, @options.height).attr
       stroke: @colors.bg

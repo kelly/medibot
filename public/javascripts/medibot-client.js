@@ -17,11 +17,42 @@
   Medibot.Models || (Medibot.Models = {});
 
   Medibot.Models.Joystick = Backbone.Model.extend({
-    defaults: [0, 0],
+    defaults: {
+      sensitivity: 0.05,
+      sources: ['camera', 'motors'],
+      sourceOn: 0,
+      last: {
+        x: 0,
+        y: 0
+      },
+      pos: {
+        x: 0,
+        y: 0
+      }
+    },
     initialize: function() {
-      return this.on('change', function(pos) {
-        return Medibot.socket.emit('control:move', pos);
+      return this.on('change', function() {
+        var last, pos, sens;
+        last = this.get('last');
+        sens = this.get('sensitivity');
+        pos = this.get('pos');
+        if ((pos.x < last.x - sens) || (pos.y < last.y - sens) || (pos.x > last.x + sens) || (pos.y > last.y + sens)) {
+          Medibot.socket.emit("" + (this.source()) + ":move", this.normalize());
+          return this.set('last', pos);
+        }
       });
+    },
+    normalize: function() {
+      var pos;
+      pos = this.get('pos');
+      if (this.source() === 'camera') {
+        norm.y = (pos.y * 90) + 90;
+        norm.x = (pos.x * 90) + 90;
+      }
+      return norm;
+    },
+    source: function() {
+      return this.get('sources')[this.get('sourceOn')];
     }
   });
 
@@ -47,7 +78,7 @@
       scanner: {
         steps: 20,
         range: [0, 180],
-        angle: 0
+        degrees: 0
       },
       ping: {
         distance: 0,
@@ -75,8 +106,8 @@
 
   Medibot.Models.Sensor = Backbone.Model.extend({
     defaults: {
-      min: 0,
-      max: 255
+      min: 410,
+      max: 565
     },
     value: 0,
     progress: function() {
@@ -480,13 +511,21 @@
     Hud.prototype.initialize = function() {
       var _this = this;
       Medibot.socket = io.connect('http://localhost');
-      this.sensorModel = new Medibot.Models.Sensor();
-      this.joystickModel = new Medibot.Models.Joystick;
-      this.sonarModel = new Medibot.Models.Sonar();
-      this.notifications = new Medibot.Collections.Notifications;
+      this.battery = new Medibot.Models.Sensor({
+        min: 410,
+        max: 565
+      });
+      this.joystick = new Medibot.Models.Joystick();
+      this.sonar = new Medibot.Models.Sonar({
+        ping: {
+          min: 0,
+          max: 140
+        }
+      });
+      this.notifications = new Medibot.Collections.Notifications();
       return Medibot.socket.on('read', function(data) {
-        _this.sensorModel.set(data.sensor);
-        return _this.sonarModel.set(data.sonar);
+        _this.battery.set(data.battery);
+        return _this.sonar.set(data.sonar);
       });
     };
 
@@ -495,7 +534,7 @@
       this.$toolbar = this.$('.toolbar');
       this.$video = this.$('.video-container');
       this.renderChild(new Medibot.Views.Sensor({
-        model: this.sensorModel,
+        model: this.battery,
         radius: 20,
         digit: true,
         label: 'Battery'
@@ -504,14 +543,14 @@
         collection: this.notifications
       }));
       this.renderChild(new Medibot.Views.Sonar({
-        model: this.sonarModel,
+        model: this.sonar,
         lineWidth: 1,
         radius: 90,
         digit: false,
         label: 'Sonar'
       }), this.$toolbar);
       this.renderChild(new Medibot.Views.BlockGraph({
-        model: this.sensorModel,
+        model: this.battery,
         height: 20,
         width: 120,
         rows: 1,
@@ -520,18 +559,13 @@
         direction: 'right'
       }), this.$toolbar);
       this.renderChild(new Medibot.Views.Joystick({
-        model: this.joystickModel,
+        model: this.joystick,
         div: '.video-container',
         width: 640,
         height: 320,
         lineWidth: 1,
         digit: false
       }), this.$video);
-      this.renderChild(new Medibot.Views.Compass({
-        model: this.sensorModel,
-        lineWidth: 1,
-        radius: 70
-      }));
       return this;
     };
 
@@ -570,6 +604,10 @@
 
     Joystick.prototype.className = 'joystick';
 
+    Joystick.prototype.events = {
+      'click .button': 'sourceChange'
+    };
+
     Joystick.prototype.initialize = function(options) {
       var $parent,
         _this = this;
@@ -599,8 +637,13 @@
       hHeight = this.options.height / 2;
       dx = Medibot.fn.constrain(dx, -hWidth, hWidth);
       dy = Medibot.fn.constrain(dy, -hHeight, hHeight);
-      pos = [dx / hWidth, dy / hHeight];
-      this.model.set(pos);
+      pos = {
+        x: dx / hWidth,
+        y: dy / hHeight
+      };
+      this.model.set({
+        pos: pos
+      });
       return this.control.attr({
         cx: this.cx + dx,
         cy: this.cy + dy
@@ -615,8 +658,17 @@
       }, 200, 'backOut');
     };
 
+    Joystick.prototype.sourceChange = function(evt) {
+      return this.model.set({
+        sourceOn: $('.buttons li').index($(evt.target).parent())
+      });
+    };
+
     Joystick.prototype.render = function() {
+      var sources;
       Joystick.__super__.render.apply(this, arguments);
+      sources = this.model.get('sources');
+      this.$el.append("<ul class='buttons'><li><a href='#' class='button " + sources[0] + "-button'>                 " + sources[0] + "</a></li><li><a href='#' class='button " + sources[1] + "-button'>" + sources[1] + "</a></li></ul>");
       this.bg = this.paper.rect(0, 0, this.options.width, this.options.height).attr({
         stroke: this.colors.bg,
         'stroke-width': this.lineWidth
@@ -716,7 +768,7 @@
       scanner = this.model.get('scanner');
       ping = this.model.get('ping');
       if (ping.distance < ping.max) {
-        point = this.paper.rect((ping.distance / ping.max) * this.options.radius, this.center - this.options.lineWidth, 5, 5).rotate(scanner.angle, this.center, this.center - this.options.lineWidth).attr({
+        point = this.paper.rect((ping.distance / ping.max) * this.options.radius, this.center - this.options.lineWidth, 5, 5).rotate(scanner.degrees, this.center, this.center - this.options.lineWidth).attr({
           fill: this.colors.highlight,
           stroke: false
         });
@@ -736,7 +788,7 @@
         });
       });
       return this.beam.animate({
-        transform: "R" + scanner.angle + "," + this.center + "," + (this.center - this.options.lineWidth)
+        transform: "R" + scanner.degrees + "," + this.center + "," + (this.center - this.options.lineWidth)
       }, 1000);
     };
 

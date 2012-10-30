@@ -27,7 +27,8 @@ class Bot extends EventEmitter
     @compass = new five.Magnetometer()
 
     @battery.on 'warning', =>
-      @stop 'warning: low power: #{@value}'
+      @stop()
+      @_status 'warning: low power: #{@value}'
 
     @sonar.on 'warning', =>
       if @motors.isMoving 
@@ -53,19 +54,20 @@ class Bot extends EventEmitter
     
     five.Servos().center()
 
-    # kick things off with a sonar scan
-    @sonar.scan()
+    if @autonomous
+      # kick things off with a sonar scan
+      @sonar.scan()
 
-    # determine heading. Take an average of readings
-    @repeat 30, 100, =>
-      @heading = (@heading + @compass.heading) / 2
+      # determine heading. Take an average of readings
+      @repeat 30, 100, =>
+        @heading = (@heading + @compass.heading) / 2
 
     # emit current sensor readings
-    @loop 100, =>
+    @loop 200, =>
       @_read()
 
   drive: (control) ->
-    # @status "moving #{direction}"
+    # @_status "moving #{direction}"
     # if speed then @motors.setSpeed speed
     # @motors.go direction
   
@@ -77,20 +79,21 @@ class Bot extends EventEmitter
         @motors.go 'forward'
         control.stop()
 
-  stop: (msg) ->
-    @_status 'stopped'
+  stop: ->
     @motors.decelerate(0)
+
+  _status: (msg) ->
+    @emit 'notification', msg
 
   _read: ->
     @last =
       timestamp: Date.now()
       sonar: 
-        scanner: if @sonar.scanner.last then @sonar.scanner.last.degrees else false 
-        ping: @sonar.ping.inches
-      battery: 
-        min: @battery.min
-        max: @battery.max
-        value: @battery.value
+        scanner: 
+          degrees: if @sonar.scanner.last then @sonar.scanner.last.degrees else false 
+        ping: 
+          distance: @sonar.ping.inches
+      battery: _.pick @battery, 'min', 'max', 'value'
       motors: 
         left: @motors.left.value
         right: @motors.right.value

@@ -8,16 +8,15 @@ class Medibot.Views.Hud extends Medibot.Views.Base
   initialize: ->
     Medibot.socket = io.connect 'http://localhost'
 
-    @sensorModel = new Medibot.Models.Sensor()
-    @joystickModel = new Medibot.Models.Joystick
-    @sonarModel = new Medibot.Models.Sonar()
-
-    @notifications = new Medibot.Collections.Notifications
+    @battery       = new Medibot.Models.Sensor min: 410, max: 565
+    @joystick      = new Medibot.Models.Joystick()
+    @sonar         = new Medibot.Models.Sonar ping: { min: 0, max: 140 }
+    @notifications = new Medibot.Collections.Notifications()
 
     Medibot.socket.on 'read', (data) =>
       # @setData data
-      @sensorModel.set(data.sensor)
-      @sonarModel.set(data.sonar)
+      @battery.set(data.battery)
+      @sonar.set(data.sonar)
 
   # setData: (data) ->
 
@@ -29,7 +28,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     @$video = @$('.video-container')
 
     @renderChild new Medibot.Views.Sensor(
-      model: @sensorModel
+      model: @battery
       radius: 20
       digit: true
       label: 'Battery'
@@ -39,7 +38,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
       collection: @notifications
 
     @renderChild new Medibot.Views.Sonar(
-      model: @sonarModel
+      model: @sonar
       lineWidth: 1
       radius: 90
       digit: false
@@ -47,7 +46,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     ), @$toolbar
 
     @renderChild new Medibot.Views.BlockGraph(
-      model: @sensorModel
+      model: @battery
       height: 20
       width: 120
       rows: 1
@@ -57,7 +56,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     ), @$toolbar
 
     @renderChild new Medibot.Views.Joystick(
-      model: @joystickModel
+      model: @joystick
       div: '.video-container'
       width: 640
       height: 320
@@ -65,10 +64,10 @@ class Medibot.Views.Hud extends Medibot.Views.Base
       digit: false
     ), @$video
 
-    @renderChild new Medibot.Views.Compass(
-      model: @sensorModel
-      lineWidth: 1
-      radius: 70
-    )
+    # @renderChild new Medibot.Views.Compass(
+    #   model: @sensorModel
+    #   lineWidth: 1
+    #   radius: 70
+    # )
 
     @
