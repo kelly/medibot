@@ -9,7 +9,6 @@ http = require 'http'
 app = express()
 server = http.createServer(app)
 io = require('socket.io').listen(server)
-io.set 'origins','*'
 
 app.configure ->  
   app.set "port", process.env.PORT or 3001
