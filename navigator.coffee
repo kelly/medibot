@@ -1,6 +1,6 @@
 five = require 'johnny-five'
 util = require 'util' 
-medibot = require './lib/medibot.js'
+medibot = require './lib/medibot'
 express = require 'express'
 http = require 'http'
 # io = require('socket.io').listen(app).set('log level', 1);
@@ -26,7 +26,6 @@ app.configure ->
     __dirname + "/public/javascripts/medibot-templates.min.js",
     ['handlebars', 'hbs']
   )
-
 
 app.get '/', (req, res) ->
   res.render 'index',

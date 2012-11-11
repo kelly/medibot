@@ -4,16 +4,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  Medibot.Collections || (Medibot.Collections = {});
-
-  Medibot.Collections.Notifications = Backbone.Collection.extend({
-    model: Medibot.Models.Notification
-  });
-
-  Medibot.Collections.Sensors = Backbone.Collection.extend({
-    model: Medibot.Models.Sensor
-  });
-
   Medibot.Models || (Medibot.Models = {});
 
   Medibot.Models.Joystick = Backbone.Model.extend({
@@ -37,19 +27,10 @@
         sens = this.get('sensitivity');
         pos = this.get('pos');
         if ((pos.x < last.x - sens) || (pos.y < last.y - sens) || (pos.x > last.x + sens) || (pos.y > last.y + sens)) {
-          Medibot.socket.emit("" + (this.source()) + ":move", this.normalize());
+          Medibot.socket.emit("" + (this.source()) + ":move", pos);
           return this.set('last', pos);
         }
       });
-    },
-    normalize: function() {
-      var pos;
-      pos = this.get('pos');
-      if (this.source() === 'camera') {
-        norm.y = (pos.y * 90) + 90;
-        norm.x = (pos.x * 90) + 90;
-      }
-      return norm;
     },
     source: function() {
       return this.get('sources')[this.get('sourceOn')];
@@ -115,59 +96,15 @@
     }
   });
 
-  $.fn.animationComplete = function(callback) {
-    var animationEnd;
-    if (Modernizr.cssanimations) {
-      animationEnd = "animationend webkitAnimationEnd";
-      if ($.isFunction(callback)) {
-        return $(this).one(animationEnd, callback);
-      }
-    } else {
-      setTimeout(callback, 0);
-      return $(this);
-    }
-  };
+  Medibot.Collections || (Medibot.Collections = {});
 
-  $.fn.animateCSS = function(animation, callback) {
-    animation || (animation = "none");
-    $(this).addClass("animated " + animation).animationComplete(function() {
-      $(this).removeClass("animated " + animation);
-      if (callback) {
-        return callback();
-      }
-    });
-    return $(this);
-  };
-
-  window.requestAnimFrame = (function() {
-    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
-      return window.setTimeout(callback, 1000 / 60);
-    };
-  })();
-
-  $('body').on("touchmove", function(evt) {
-    return evt.preventDefault();
+  Medibot.Collections.Notifications = Backbone.Collection.extend({
+    model: Medibot.Models.Notification
   });
 
-  Raphael.fn.sector = function(cx, cy, r, startAngle, endAngle) {
-    var rad, x1, x2, y1, y2;
-    rad = Math.PI / 180;
-    x1 = cx + r * Math.cos(-startAngle * rad);
-    x2 = cx + r * Math.cos(-endAngle * rad);
-    y1 = cy + r * Math.sin(-startAngle * rad);
-    y2 = cy + r * Math.sin(-endAngle * rad);
-    return this.path(["M", cx, cy, "L", x1, y1, "A", r, r, 0, +(endAngle - startAngle > 180), 0, x2, y2, "z"]);
-  };
-
-  Raphael.fn.roundedRectangle = function(x, y, w, h, r1, r2, r3, r4) {
-    var array;
-    array = [];
-    array = array.concat(["M", x, r1 + y, "Q", x, y, x + r1, y]);
-    array = array.concat(["L", x + w - r2, y, "Q", x + w, y, x + w, y + r2]);
-    array = array.concat(["L", x + w, y + h - r3, "Q", x + w, y + h, x + w - r3, y + h]);
-    array = array.concat(["L", x + r4, y + h, "Q", x, y + h, x, y + h - r4, "Z"]);
-    return this.path(array);
-  };
+  Medibot.Collections.Sensors = Backbone.Collection.extend({
+    model: Medibot.Models.Sensor
+  });
 
   Medibot.Views || (Medibot.Views = {});
 
@@ -824,5 +761,59 @@
     return Sonar;
 
   })(Medibot.Views.RaphaelBase);
+
+  $.fn.animationComplete = function(callback) {
+    var animationEnd;
+    if (Modernizr.cssanimations) {
+      animationEnd = "animationend webkitAnimationEnd";
+      if ($.isFunction(callback)) {
+        return $(this).one(animationEnd, callback);
+      }
+    } else {
+      setTimeout(callback, 0);
+      return $(this);
+    }
+  };
+
+  $.fn.animateCSS = function(animation, callback) {
+    animation || (animation = "none");
+    $(this).addClass("animated " + animation).animationComplete(function() {
+      $(this).removeClass("animated " + animation);
+      if (callback) {
+        return callback();
+      }
+    });
+    return $(this);
+  };
+
+  window.requestAnimFrame = (function() {
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
+      return window.setTimeout(callback, 1000 / 60);
+    };
+  })();
+
+  $('body').on("touchmove", function(evt) {
+    return evt.preventDefault();
+  });
+
+  Raphael.fn.sector = function(cx, cy, r, startAngle, endAngle) {
+    var rad, x1, x2, y1, y2;
+    rad = Math.PI / 180;
+    x1 = cx + r * Math.cos(-startAngle * rad);
+    x2 = cx + r * Math.cos(-endAngle * rad);
+    y1 = cy + r * Math.sin(-startAngle * rad);
+    y2 = cy + r * Math.sin(-endAngle * rad);
+    return this.path(["M", cx, cy, "L", x1, y1, "A", r, r, 0, +(endAngle - startAngle > 180), 0, x2, y2, "z"]);
+  };
+
+  Raphael.fn.roundedRectangle = function(x, y, w, h, r1, r2, r3, r4) {
+    var array;
+    array = [];
+    array = array.concat(["M", x, r1 + y, "Q", x, y, x + r1, y]);
+    array = array.concat(["L", x + w - r2, y, "Q", x + w, y, x + w, y + r2]);
+    array = array.concat(["L", x + w, y + h - r3, "Q", x + w, y + h, x + w - r3, y + h]);
+    array = array.concat(["L", x + r4, y + h, "Q", x, y + h, x, y + h - r4, "Z"]);
+    return this.path(array);
+  };
 
 }).call(this);

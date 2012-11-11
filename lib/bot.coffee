@@ -4,7 +4,7 @@ _ = require 'underscore'
 util = require 'util' 
 compulsive = require 'compulsive'
 EventEmitter = require('events').EventEmitter
-medibot = require '../lib/medibot.js'
+medibot = require '../lib/medibot'
 
 class Bot extends EventEmitter
 

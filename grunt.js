@@ -15,18 +15,11 @@ module.exports = function(grunt){
     },
     coffee: {
       dist1: {
-        files: [ 'assets/javascripts/*' ],
+        files: [ 'assets/javascripts/models/*', 'assets/javascripts/collections/*', 'assets/javascripts/views/*', 'assets/javascripts/plugins/*' ],
         dest: 'public/javascripts/medibot-client.js'
-      },
-      dist2: {
-        dir: 'lib'
       }
     },
     concat: {
-      // dist1: {
-      //   src: [ 'assets/public/javascripts/medibot-templates.min.js', 'assets/public/javascripts/medibot-client.min.js' ],
-      //   dest: 'assets/public/javascripts/medibot-client.js'
-      // },
       dist2: {
         src: [ 'assets/vendor/javascripts/*' ],
         dest: 'public/javascripts/vendor.js'
@@ -45,11 +38,13 @@ module.exports = function(grunt){
     watch: {
       dist1: {
         files: '<config:coffee.dist1.files>',
-        tasks: 'coffee:dist1'
+        tasks: 'simple'
       }
     }
   });
 
   grunt.loadTasks('tasks');
   grunt.registerTask('default', 'coffee min concat compass cssmin ok');
+  grunt.registerTask('simple', 'coffee min concat');
+
 };

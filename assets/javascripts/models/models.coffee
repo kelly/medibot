@@ -18,19 +18,10 @@ Medibot.Models.Joystick = Backbone.Model.extend
       last = @get('last')
       sens = @get('sensitivity')
       pos = @get('pos')
-
+      
       if (pos.x < last.x - sens) || (pos.y < last.y - sens) || (pos.x > last.x + sens) || (pos.y > last.y + sens)
-        Medibot.socket.emit "#{@source()}:move", @normalize()
+        Medibot.socket.emit "#{@source()}:move", pos
         @set('last', pos)
-
-  normalize: ->
-    pos = @get('pos')
-
-    if @source() == 'camera'
-      norm.y = (pos.y * 90) + 90
-      norm.x = (pos.x * 90) + 90
-
-    return norm
 
   source: ->
     @get('sources')[@get('sourceOn')]
@@ -52,6 +43,7 @@ Medibot.Models.Sonar = Backbone.Model.extend
       distance: 0
       min: 0
       max: 140
+
 
 Medibot.Models.Notification = Backbone.Model.extend
   defaults:
