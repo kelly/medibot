@@ -14,7 +14,7 @@ class Camera extends EventEmitter
     @pan = new five.Servo
       pin: 7
 
-    @ffserver = spawn('ffserver')
+    @ffserver = spawn('ffserver', ['-f', 'config/ffserver.conf'])
 
   control: (pos) ->
     for servo in [@pan, @tilt]
