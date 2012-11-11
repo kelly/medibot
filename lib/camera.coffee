@@ -29,7 +29,7 @@ class Camera extends EventEmitter
 
     @stream.on "exit", (code) =>
       console.log "stream exited with code " + code  if code isnt 0
-      @ffmpeg.stdin.end()
+      @stream.stdin.end()
       @recording = false
 
   stop: ->
