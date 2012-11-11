@@ -8,7 +8,7 @@ class Medibot.Views.CircularGraph extends Medibot.Views.RaphaelBase
     max = @model.get('max')
     
     unless value > max
-      @$digit.text(value)
+      if @options.digit then @$digit.text(value)
       @circle.animate
         arc: [@center, @center, value, max, @options.radius]
       , 200, @options.animation

@@ -1,9 +1,5 @@
 five = require 'johnny-five'
-__ = require 'johnny-five/lib/fn.js'
-_ = require 'underscore' 
 util = require 'util' 
-compulsive = require 'compulsive'
-fs = require 'fs'
 EventEmitter = require('events').EventEmitter
 spawn = require('child_process').spawn
 
@@ -17,6 +13,8 @@ class Camera extends EventEmitter
 
     @pan = new five.Servo
       pin: 7
+
+    @ffserver = spawn('ffserver')
 
   control: (pos) ->
     for servo in [@pan, @tilt]

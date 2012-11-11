@@ -53,9 +53,12 @@ Medibot.Models.Notification = Backbone.Model.extend
     priority: 0
 
 Medibot.Models.Motor = Backbone.Model.extend
-	defaults:
-		left: 0
-		right: 0
+  defaults:
+    min: 0
+    max: 255
+    value: 0
+  progress: ->
+    @get('value') / @get('max')
 
 Medibot.Models.Sensor = Backbone.Model.extend
 	defaults:

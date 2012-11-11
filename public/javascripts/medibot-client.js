@@ -80,8 +80,12 @@
 
   Medibot.Models.Motor = Backbone.Model.extend({
     defaults: {
-      left: 0,
-      right: 0
+      min: 0,
+      max: 255,
+      value: 0
+    },
+    progress: function() {
+      return this.get('value') / this.get('max');
     }
   });
 
@@ -228,8 +232,8 @@
     },
     resize: function(width, height) {
       this.paper.clear();
-      this.options.width = this.width;
-      this.options.height = this.height;
+      this.options.width = width;
+      this.options.height = height;
       return this.render();
     },
     render: function() {
@@ -374,7 +378,9 @@
       value = this.model.get('value');
       max = this.model.get('max');
       if (!(value > max)) {
-        this.$digit.text(value);
+        if (this.options.digit) {
+          this.$digit.text(value);
+        }
         return this.circle.animate({
           arc: [this.center, this.center, value, max, this.options.radius]
         }, 200, this.options.animation);
@@ -452,17 +458,21 @@
         min: 410,
         max: 565
       });
-      this.joystick = new Medibot.Models.Joystick();
+      this.joystick = new Medibot.Models.Joystick;
+      this.motorLeft = new Medibot.Models.Motor;
+      this.motorRight = new Medibot.Models.Motor;
       this.sonar = new Medibot.Models.Sonar({
         ping: {
           min: 0,
           max: 140
         }
       });
-      this.notifications = new Medibot.Collections.Notifications();
+      this.notifications = new Medibot.Collections.Notifications;
       return Medibot.socket.on('read', function(data) {
         _this.battery.set(data.battery);
-        return _this.sonar.set(data.sonar);
+        _this.sonar.set(data.sonar);
+        _this.motorLeft.set('value', data.motors.left);
+        return _this.motorRight.set('value', data.motors.right);
       });
     };
 
@@ -473,7 +483,7 @@
       this.renderChild(new Medibot.Views.Sensor({
         model: this.battery,
         radius: 20,
-        digit: true,
+        digit: false,
         label: 'Battery'
       }), this.$toolbar);
       this.renderChild(new Medibot.Views.NotificationFooter({
@@ -487,17 +497,28 @@
         label: 'Sonar'
       }), this.$toolbar);
       this.renderChild(new Medibot.Views.BlockGraph({
-        model: this.battery,
+        model: this.motorLeft,
         height: 20,
         width: 120,
         rows: 1,
         cols: 10,
         lineWidth: 1,
+        label: "Motor L",
+        direction: 'right'
+      }), this.$toolbar);
+      this.renderChild(new Medibot.Views.BlockGraph({
+        model: this.motorRight,
+        height: 20,
+        width: 120,
+        rows: 1,
+        cols: 10,
+        lineWidth: 1,
+        label: "Motor R",
         direction: 'right'
       }), this.$toolbar);
       this.renderChild(new Medibot.Views.Joystick({
         model: this.joystick,
-        div: '.video-container',
+        $parent: this.$video,
         width: 640,
         height: 320,
         lineWidth: 1,
@@ -535,6 +556,8 @@
 
       this.move = __bind(this.move, this);
 
+      this.added = __bind(this.added, this);
+
       this.start = __bind(this.start, this);
       return Joystick.__super__.constructor.apply(this, arguments);
     }
@@ -546,19 +569,17 @@
     };
 
     Joystick.prototype.initialize = function(options) {
-      var $parent,
-        _this = this;
+      var _this = this;
       this.options = options != null ? options : {};
-      $parent = $('.video-container');
       _.defaults(this.options, {
         animation: "<>",
         lineWidth: 8,
         digit: true,
         frequency: 100
       });
+      this.$parent = this.options.$parent;
       return $(window).on('resize', function() {
-        $parent = $(_this.options.div);
-        return _this.resize($parent.width(), $parent.height());
+        return _this.resize(_this.$parent.width(), _this.$parent.height());
       });
     };
 
@@ -566,6 +587,10 @@
       return this.control.animate({
         fill: this.colors.highlight2
       }, 300, '<>');
+    };
+
+    Joystick.prototype.added = function() {
+      return this.resize(this.$parent.width(), this.$parent.height());
     };
 
     Joystick.prototype.move = function(dx, dy) {
@@ -604,6 +629,7 @@
     Joystick.prototype.render = function() {
       var sources;
       Joystick.__super__.render.apply(this, arguments);
+      $('.joystick').livequery(this.added);
       sources = this.model.get('sources');
       this.$el.append("<ul class='buttons'><li><a href='#' class='button " + sources[0] + "-button'>                 " + sources[0] + "</a></li><li><a href='#' class='button " + sources[1] + "-button'>" + sources[1] + "</a></li></ul>");
       this.bg = this.paper.rect(0, 0, this.options.width, this.options.height).attr({

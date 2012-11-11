@@ -94,11 +94,12 @@ Medibot.Views.RaphaelBase = Backbone.View.extend
 
   resize: (width, height) ->
     @paper.clear()
-    @options.width = @width
-    @options.height = @height
+    @options.width = width
+    @options.height = height
     @render()
 
   render: ->
+
     if @options.label then @$el.append "<h3 class='section-label'>#{@options.label}</h3>"
     if @options.radius 
       @center = @options.radius + @options.lineWidth

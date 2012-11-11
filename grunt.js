@@ -45,6 +45,6 @@ module.exports = function(grunt){
 
   grunt.loadTasks('tasks');
   grunt.registerTask('default', 'coffee min concat compass cssmin ok');
-  grunt.registerTask('simple', 'coffee min concat');
+  grunt.registerTask('simple', 'coffee min');
 
 };

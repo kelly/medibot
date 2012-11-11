@@ -9,16 +9,17 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     Medibot.socket = io.connect 'http://localhost'
 
     @battery       = new Medibot.Models.Sensor min: 410, max: 565
-    @joystick      = new Medibot.Models.Joystick()
+    @joystick      = new Medibot.Models.Joystick
+    @motorLeft     = new Medibot.Models.Motor
+    @motorRight    = new Medibot.Models.Motor
     @sonar         = new Medibot.Models.Sonar ping: { min: 0, max: 140 }
-    @notifications = new Medibot.Collections.Notifications()
+    @notifications = new Medibot.Collections.Notifications
 
     Medibot.socket.on 'read', (data) =>
-      # @setData data
       @battery.set(data.battery)
       @sonar.set(data.sonar)
-
-  # setData: (data) ->
+      @motorLeft.set('value', data.motors.left)
+      @motorRight.set('value', data.motors.right)
 
   render: ->
 
@@ -30,7 +31,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     @renderChild new Medibot.Views.Sensor(
       model: @battery
       radius: 20
-      digit: true
+      digit: false
       label: 'Battery'
     ), @$toolbar
 
@@ -46,18 +47,30 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     ), @$toolbar
 
     @renderChild new Medibot.Views.BlockGraph(
-      model: @battery
+      model: @motorLeft
       height: 20
       width: 120
       rows: 1
       cols: 10
       lineWidth: 1
+      label: "Motor L"
+      direction: 'right'
+    ), @$toolbar
+
+    @renderChild new Medibot.Views.BlockGraph(
+      model: @motorRight
+      height: 20
+      width: 120
+      rows: 1
+      cols: 10
+      lineWidth: 1
+      label: "Motor R"
       direction: 'right'
     ), @$toolbar
 
     @renderChild new Medibot.Views.Joystick(
       model: @joystick
-      div: '.video-container'
+      $parent: @$video
       width: 640
       height: 320
       lineWidth: 1

@@ -50,8 +50,8 @@ app.get '/', (req, res) ->
 #     bot.on 'read', ->
 #       client.emit 'read', bot.last
     
-#     # client.on 'motors:move', (pos) ->
-#     #   bot.motors.move pos
+#     client.on 'motors:move', (pos) ->
+#       bot.motors.move pos
 
 #     client.on 'camera:move', (pos) ->
 #       bot.camera.move pos
@@ -63,6 +63,11 @@ io.sockets.on "connection", (client) ->
   angle = 0
   setInterval ->
     client.emit 'read', 
+      battery:
+        value: Math.floor(Math.random() *255)
+      motors:
+        left: Math.floor(Math.random() *255)
+        right: Math.floor(Math.random() * 255)
       sensor:
         value: Math.floor(Math.random() *255)
       sonar:

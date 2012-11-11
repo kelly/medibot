@@ -11,7 +11,6 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
     'click .button' : 'sourceChange'
 
   initialize: (@options = {}) ->
-    $parent = $('.video-container')
 
     _.defaults @options,
       animation: "<>"
@@ -19,9 +18,10 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
       digit: true
       frequency: 100
 
+    @$parent = @options.$parent
+
     $(window).on 'resize', =>
-      $parent = $(@options.div)
-      @resize $parent.width(), $parent.height()
+      @resize @$parent.width(), @$parent.height()
 
   start: =>
     @control.animate
@@ -31,6 +31,9 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
     # @timer = setInterval =>
     #   @trigger 'move', @pos
     # , @options.frequency
+
+  added: =>
+    @resize @$parent.width(), @$parent.height()
 
   move: (dx, dy) =>
 
@@ -60,6 +63,8 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
 
   render: ->
     super
+
+    $('.joystick').livequery @added
 
     sources = @model.get 'sources'
     @$el.append "<ul class='buttons'><li><a href='#' class='button #{sources[0]}-button'>
