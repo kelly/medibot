@@ -6,7 +6,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
   template: Handlebars.templates['hud']
 
   initialize: ->
-    Medibot.socket = io.connect 'http://localhost'
+    Medibot.socket = io.connect 'http://192.168.0.192'
 
     @battery       = new Medibot.Models.Sensor min: 410, max: 565
     @joystick      = new Medibot.Models.Joystick
