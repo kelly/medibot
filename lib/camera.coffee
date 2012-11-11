@@ -14,23 +14,25 @@ class Camera extends EventEmitter
     @pan = new five.Servo
       pin: 7
 
-    @ffserver = spawn('ffserver', ['-f', 'config/ffserver.conf'])
+    #@ffserver = spawn('ffserver', ['-f', 'config/ffserver.conf'])
 
   control: (pos) ->
     for servo in [@pan, @tilt]
       servo.move (pos[_i] * 90) + 90
 
   record: ->
-    @ffmpeg = spawn('ffmpeg',['-f','video4linux2','-i','/dev/video0', '-vcodec', 'libvpx', 'test2.avi'])
+
+    @stream = spawn('/home/kelly/mjpg-streamer/mjpg-streamer/mjpg_streamer', ['-i', '"/home/kelly/mjpg-streamer/mjpg-streamer/input_uvc.so -n -f 15 -r 640x480"', '-o', '"/home/kelly/mjpg-streamer/mjpg-streamer/output_http.so -n -w ./www"'])
+    #@ffmpeg = spawn('ffmpeg',['-f','video4linux2','-i','/dev/video0', '-vcodec', 'libvpx', 'test2.avi'])
 
     @recording = true
 
-    @ffmpeg.on "exit", (code) =>
-      console.log "ffmpeg exited with code " + code  if code isnt 0
+    @stream.on "exit", (code) =>
+      console.log "stream exited with code " + code  if code isnt 0
       @ffmpeg.stdin.end()
       @recording = false
 
   stop: ->
-    if @recording then @ffmpeg.kill('SIGHUP')
+    if @recording then @stream.kill('SIGHUP')
 
 module.exports = Camera

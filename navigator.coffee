@@ -33,60 +33,60 @@ app.get '/', (req, res) ->
       title: 'medibot'
 
 # arduino connected code
-# board = new five.Board()
+board = new five.Board()
 
-# board.on "ready", ->
+board.on "ready", ->
 
-#   bot = new medibot.Bot autonomous: false
+  bot = new medibot.Bot autonomous: false
 
-#   io.sockets.on "connection", (client) ->
+  io.sockets.on "connection", (client) ->
 
-#     bot.start()
-#     bot.camera.record()
+    bot.start()
+    bot.camera.record()
 
-#     client.on 'drive', ->
-#       bot.drive()
+    client.on 'drive', ->
+      bot.drive()
 
-#     bot.on 'read', ->
-#       client.emit 'read', bot.last
+    bot.on 'read', ->
+      client.emit 'read', bot.last
     
-#     client.on 'motors:move', (pos) ->
-#       bot.motors.move pos
+    client.on 'motors:move', (pos) ->
+      bot.motors.move pos
 
-#     client.on 'camera:move', (pos) ->
-#       bot.camera.move pos
+    client.on 'camera:move', (pos) ->
+      bot.camera.move pos
 
 # testing code
-io.sockets.on "connection", (client) ->
-  console.log "connected"
-  i = 0
-  angle = 0
-  setInterval ->
-    client.emit 'read', 
-      battery:
-        value: Math.floor(Math.random() *255)
-      motors:
-        left: Math.floor(Math.random() *255)
-        right: Math.floor(Math.random() * 255)
-      sensor:
-        value: Math.floor(Math.random() *255)
-      sonar:
-        scanner: 
-          degrees: Math.floor(Math.random() *255)
-        ping:
-          distance: Math.floor(Math.random() * 50)
-          min: 0
-          max: 50
-    angle += 20
-  , 1000
-  client.on 'camera:move', (pos) ->
-    console.log 'camera: ' + pos.x + ' ' + pos.y
+# io.sockets.on "connection", (client) ->
+#   console.log "connected"
+#   i = 0
+#   angle = 0
+#   setInterval ->
+#     client.emit 'read', 
+#       battery:
+#         value: Math.floor(Math.random() *255)
+#       motors:
+#         left: Math.floor(Math.random() *255)
+#         right: Math.floor(Math.random() * 255)
+#       sensor:
+#         value: Math.floor(Math.random() *255)
+#       sonar:
+#         scanner: 
+#           degrees: Math.floor(Math.random() *255)
+#         ping:
+#           distance: Math.floor(Math.random() * 50)
+#           min: 0
+#           max: 50
+#     angle += 20
+#   , 1000
+#   client.on 'camera:move', (pos) ->
+#     console.log 'camera: ' + pos.x + ' ' + pos.y
 
-  client.on 'motors:move', (pos) ->
-    if pos[0] < 0
-      left = pos[0] * 255
-    normalized = pos[0]
+#   client.on 'motors:move', (pos) ->
+#     if pos[0] < 0
+#       left = pos[0] * 255
+#     normalized = pos[0]
 
-    console.log 'motors: ' + pos.x + ' ' + pos.y
+#     console.log 'motors: ' + pos.x + ' ' + pos.y
 
 server.listen(3001);
