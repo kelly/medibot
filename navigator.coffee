@@ -51,10 +51,11 @@ board.on "ready", ->
       client.emit 'read', bot.last
     
     client.on 'motors:move', (pos) ->
-      bot.motors.move pos
+      bot.motors.control pos
 
     client.on 'camera:move', (pos) ->
-      bot.camera.move pos
+      console.log 'camera moving'
+      bot.camera.control pos
 
 # testing code
 # io.sockets.on "connection", (client) ->
