@@ -37,7 +37,7 @@ board = new five.Board()
 
 board.on "ready", ->
 
-  bot = new medibot.Bot autonomous: false
+  bot = new medibot.Bot
 
   io.sockets.on "connection", (client) ->
 
