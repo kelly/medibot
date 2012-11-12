@@ -21,7 +21,7 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
     @$parent = @options.$parent
 
     $(window).on 'resize', =>
-      @resize @$parent.width(), @$parent.height()
+      @resize()
 
   start: =>
     @control.animate
@@ -32,10 +32,34 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
     #   @trigger 'move', @pos
     # , @options.frequency
 
-  added: =>
+  resize: =>
     $video = $('.video')
-    @resize $video.width(), $video.height()
+    @options.width = $video.width()
+    @options.height = $video.height()
+    @draw()
 
+  draw: ->
+    sources = @model.get 'sources'
+
+    @$el.append "<ul class='buttons'><li><a href='#' class='button #{sources[0]}-button'>
+                 #{sources[0]}</a></li><li><a href='#' class='button #{sources[1]}-button'>#{sources[1]}</a></li></ul>"
+
+    @bg = @paper.rect(0, 0, @options.width, @options.height).attr
+      stroke: @colors.bg
+      'stroke-width': @lineWidth
+
+    @home = @paper.circle(@cx, @cy, 30).attr
+      fill: @colors.bg
+      stroke: false
+
+    @control = @paper.circle(@cx, @cy, 30).attr
+      stroke: false
+      fill: @colors.highlight
+      opacity: 0.7
+      "stroke-width": @options.lineWidth
+
+    @control.drag(@move, @start, @end)
+    
   move: (dx, dy) =>
 
     hWidth = @options.width / 2
@@ -65,27 +89,6 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
   render: ->
     super
 
-    $('.joystick').livequery @added
-
-    sources = @model.get 'sources'
-
-    @$el.append "<ul class='buttons'><li><a href='#' class='button #{sources[0]}-button'>
-                 #{sources[0]}</a></li><li><a href='#' class='button #{sources[1]}-button'>#{sources[1]}</a></li></ul>"
-
-    @bg = @paper.rect(0, 0, @options.width, @options.height).attr
-      stroke: @colors.bg
-      'stroke-width': @lineWidth
-
-    @home = @paper.circle(@cx, @cy, 30).attr
-      fill: @colors.bg
-      stroke: false
-
-    @control = @paper.circle(@cx, @cy, 30).attr
-      stroke: false
-      fill: @colors.highlight
-      opacity: 0.7
-      "stroke-width": @options.lineWidth
-
-    @control.drag(@move, @start, @end)
+    unless $('.joystick') then $('.joystick').livequery @resize
 
     @

@@ -64,6 +64,7 @@ class Bot extends EventEmitter
 
     # emit current sensor readings
     @loop 400, =>
+      console.log 'looped'
       @_read()
 
   drive: (control) ->

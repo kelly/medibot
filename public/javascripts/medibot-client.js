@@ -572,7 +572,7 @@
 
       this.move = __bind(this.move, this);
 
-      this.added = __bind(this.added, this);
+      this.resize = __bind(this.resize, this);
 
       this.start = __bind(this.start, this);
       return Joystick.__super__.constructor.apply(this, arguments);
@@ -595,7 +595,7 @@
       });
       this.$parent = this.options.$parent;
       return $(window).on('resize', function() {
-        return _this.resize(_this.$parent.width(), _this.$parent.height());
+        return _this.resize();
       });
     };
 
@@ -605,10 +605,33 @@
       }, 300, '<>');
     };
 
-    Joystick.prototype.added = function() {
+    Joystick.prototype.resize = function() {
       var $video;
       $video = $('.video');
-      return this.resize($video.width(), $video.height());
+      this.options.width = $video.width();
+      this.options.height = $video.height();
+      return this.draw();
+    };
+
+    Joystick.prototype.draw = function() {
+      var sources;
+      sources = this.model.get('sources');
+      this.$el.append("<ul class='buttons'><li><a href='#' class='button " + sources[0] + "-button'>                 " + sources[0] + "</a></li><li><a href='#' class='button " + sources[1] + "-button'>" + sources[1] + "</a></li></ul>");
+      this.bg = this.paper.rect(0, 0, this.options.width, this.options.height).attr({
+        stroke: this.colors.bg,
+        'stroke-width': this.lineWidth
+      });
+      this.home = this.paper.circle(this.cx, this.cy, 30).attr({
+        fill: this.colors.bg,
+        stroke: false
+      });
+      this.control = this.paper.circle(this.cx, this.cy, 30).attr({
+        stroke: false,
+        fill: this.colors.highlight,
+        opacity: 0.7,
+        "stroke-width": this.options.lineWidth
+      });
+      return this.control.drag(this.move, this.start, this.end);
     };
 
     Joystick.prototype.move = function(dx, dy) {
@@ -645,26 +668,10 @@
     };
 
     Joystick.prototype.render = function() {
-      var sources;
       Joystick.__super__.render.apply(this, arguments);
-      $('.joystick').livequery(this.added);
-      sources = this.model.get('sources');
-      this.$el.append("<ul class='buttons'><li><a href='#' class='button " + sources[0] + "-button'>                 " + sources[0] + "</a></li><li><a href='#' class='button " + sources[1] + "-button'>" + sources[1] + "</a></li></ul>");
-      this.bg = this.paper.rect(0, 0, this.options.width, this.options.height).attr({
-        stroke: this.colors.bg,
-        'stroke-width': this.lineWidth
-      });
-      this.home = this.paper.circle(this.cx, this.cy, 30).attr({
-        fill: this.colors.bg,
-        stroke: false
-      });
-      this.control = this.paper.circle(this.cx, this.cy, 30).attr({
-        stroke: false,
-        fill: this.colors.highlight,
-        opacity: 0.7,
-        "stroke-width": this.options.lineWidth
-      });
-      this.control.drag(this.move, this.start, this.end);
+      if (!$('.joystick')) {
+        $('.joystick').livequery(this.resize);
+      }
       return this;
     };
 
