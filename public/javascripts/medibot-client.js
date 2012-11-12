@@ -610,28 +610,7 @@
       $video = $('.video');
       this.options.width = $video.width();
       this.options.height = $video.height();
-      return this.draw();
-    };
-
-    Joystick.prototype.draw = function() {
-      var sources;
-      sources = this.model.get('sources');
-      this.$el.append("<ul class='buttons'><li><a href='#' class='button " + sources[0] + "-button'>                 " + sources[0] + "</a></li><li><a href='#' class='button " + sources[1] + "-button'>" + sources[1] + "</a></li></ul>");
-      this.bg = this.paper.rect(0, 0, this.options.width, this.options.height).attr({
-        stroke: this.colors.bg,
-        'stroke-width': this.lineWidth
-      });
-      this.home = this.paper.circle(this.cx, this.cy, 30).attr({
-        fill: this.colors.bg,
-        stroke: false
-      });
-      this.control = this.paper.circle(this.cx, this.cy, 30).attr({
-        stroke: false,
-        fill: this.colors.highlight,
-        opacity: 0.7,
-        "stroke-width": this.options.lineWidth
-      });
-      return this.control.drag(this.move, this.start, this.end);
+      return this.render();
     };
 
     Joystick.prototype.move = function(dx, dy) {
@@ -668,10 +647,28 @@
     };
 
     Joystick.prototype.render = function() {
+      var sources;
       Joystick.__super__.render.apply(this, arguments);
-      if (!$('.joystick')) {
-        $('.joystick').livequery(this.resize);
+      if ($('.joystick')) {
+        this.remove();
       }
+      sources = this.model.get('sources');
+      this.$el.append("<ul class='buttons'><li><a href='#' class='button " + sources[0] + "-button'>                 " + sources[0] + "</a></li><li><a href='#' class='button " + sources[1] + "-button'>" + sources[1] + "</a></li></ul>");
+      this.bg = this.paper.rect(0, 0, this.options.width, this.options.height).attr({
+        stroke: this.colors.bg,
+        'stroke-width': this.lineWidth
+      });
+      this.home = this.paper.circle(this.cx, this.cy, 30).attr({
+        fill: this.colors.bg,
+        stroke: false
+      });
+      this.control = this.paper.circle(this.cx, this.cy, 30).attr({
+        stroke: false,
+        fill: this.colors.highlight,
+        opacity: 0.7,
+        "stroke-width": this.options.lineWidth
+      });
+      this.control.drag(this.move, this.start, this.end);
       return this;
     };
 

@@ -63,9 +63,11 @@ class Bot extends EventEmitter
         @heading = (@heading + @compass.heading) / 2
 
     # emit current sensor readings
+    i = 0
     @loop 400, =>
-      console.log 'looped'
+      console.log "looped #{i}"
       @_read()
+      i++
 
   drive: (control) ->
     @_status "moving #{direction}"
