@@ -644,7 +644,7 @@
       this.model.set({
         sourceOn: $('.buttons li').index($(evt.target).parent())
       });
-      return console.log($('.buttons li').index($(evt.target).parent()));
+      return console.log('clicked');
     };
 
     Joystick.prototype.render = function() {
