@@ -475,7 +475,8 @@
       this.notifications = new Medibot.Collections.Notifications;
       return Medibot.socket.on('read', function(data) {
         _this.battery.set(data.battery);
-        _this.sonar.set(data.sonar);
+        _this.sonar.get('ping').set(data.sonar.ping);
+        _this.sonar.get('scanner').set(data.sonar.scanner);
         _this.motorLeft.set('value', data.motors.left);
         return _this.motorRight.set('value', data.motors.right);
       });

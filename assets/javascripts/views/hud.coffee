@@ -17,7 +17,8 @@ class Medibot.Views.Hud extends Medibot.Views.Base
 
     Medibot.socket.on 'read', (data) =>
       @battery.set(data.battery)
-      @sonar.set(data.sonar)
+      @sonar.get('ping').set(data.sonar.ping)
+      @sonar.get('scanner').set(data.sonar.scanner)
       @motorLeft.set('value', data.motors.left)
       @motorRight.set('value', data.motors.right)
 
