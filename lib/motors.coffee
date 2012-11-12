@@ -43,7 +43,7 @@ class Motors extends EventEmitter
 
   control: (pos) ->
     clearTimeout(@timer)
-
+    console.log pos
     speed = Math.abs(pos.y * 255) 
     diff = Math.abs(pos.x * speed)
     motors = if pos.x < 0 
