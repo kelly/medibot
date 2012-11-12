@@ -33,17 +33,22 @@ Medibot.Models.Compass = Backbone.Model.extend
 		raw: {x: 0, y: 0, z: 0}
 		scaled: {x: 0, y: 0, z: 0}
 
-Medibot.Models.Sonar = Backbone.Model.extend
+Medibot.Models.Scanner = Backbone.Model.extend
   defaults:
-    scanner:
-      steps: 20
-      range: [0, 180]
-      degrees: 0
-    ping:
-      distance: 0
-      min: 0
-      max: 140
+    steps: 20
+    range: [0, 180]
+    degrees: 0
 
+Medibot.Models.Ping = Backbone.Model.extend
+  ping:
+    distance: 0
+    min: 0
+    max: 140
+
+Medibot.Models.Sonar = Backbone.Model.extend
+  initialize: ->
+    this.set scanner, new Medibot.Models.Scanner
+    this.set ping, new Medibot.Models.Ping
 
 Medibot.Models.Notification = Backbone.Model.extend
   defaults:

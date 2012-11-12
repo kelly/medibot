@@ -12,7 +12,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     @joystick      = new Medibot.Models.Joystick
     @motorLeft     = new Medibot.Models.Motor
     @motorRight    = new Medibot.Models.Motor
-    @sonar         = new Medibot.Models.Sonar ping: { min: 0, max: 140 }
+    @sonar         = new Medibot.Models.Sonar
     @notifications = new Medibot.Collections.Notifications
 
     Medibot.socket.on 'read', (data) =>

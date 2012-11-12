@@ -8,9 +8,9 @@ class Medibot.Views.Sonar extends Medibot.Views.RaphaelBase
     scanner = @model.get('scanner')
     ping = @model.get('ping')
 
-    if ping.distance < ping.max 
-      point = @paper.rect((ping.distance / ping.max) * @options.radius, @center - @options.lineWidth, 5, 5)
-        .rotate(scanner.degrees, @center, @center - @options.lineWidth)
+    if ping.get('distance') < ping.get('max') 
+      point = @paper.rect((ping.get('distance') / ping.get('max')) * @options.radius, @center - @options.lineWidth, 5, 5)
+        .rotate(scanner.get('degrees'), @center, @center - @options.lineWidth)
         .attr 
           fill: @colors.highlight
           stroke: false
@@ -29,7 +29,7 @@ class Medibot.Views.Sonar extends Medibot.Views.RaphaelBase
         'stroke-width' : 0
 
     @beam.animate
-      transform: "R#{scanner.degrees},#{@center},#{@center - @options.lineWidth}"
+      transform: "R#{scanner.get('degrees')},#{@center},#{@center - @options.lineWidth}"
     , 1000
 
   render: -> 
@@ -39,8 +39,8 @@ class Medibot.Views.Sonar extends Medibot.Views.RaphaelBase
 
     # beam
     scanner = @model.get('scanner')
-    range = scanner.range
-    steps = scanner.steps
+    range = scanner.get('range')
+    steps = scanner.get('steps')
 
     @beam = @paper.sector(@center, @center - @options.lineWidth, @options.radius, range[1] - steps, range[1]).attr
       fill: @colors.transparent  

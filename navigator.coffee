@@ -54,7 +54,6 @@ board.on "ready", ->
       bot.motors.control pos
 
     client.on 'camera:move', (pos) ->
-      console.log 'camera moving'
       bot.camera.control pos
 
 # testing code

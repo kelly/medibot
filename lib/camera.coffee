@@ -22,7 +22,7 @@ class Camera extends EventEmitter
 
   record: ->
 
-    @stream = spawn('/home/kelly/mjpg-streamer/mjpg-streamer/mjpg_streamer', ['-i', '"/home/kelly/mjpg-streamer/mjpg-streamer/input_uvc.so -n -f 15 -r 640x480"', '-o', '"/home/kelly/mjpg-streamer/mjpg-streamer/output_http.so -n -w ./www"'])
+    @stream = spawn('/home/kelly/mjpg-streamer/mjpg-streamer/mjpg_streamer', ['-i', '"/home/kelly/mjpg-streamer/mjpg-streamer/input_uvc.so -n -f 15 -r 640x480"', '-o', '"/home/kelly/mjpg-streamer/mjpg-streamer/output_http.so -n -w /home/kelly/mjpg-streamer/mjpg-streamer/www"'])
     #@ffmpeg = spawn('ffmpeg',['-f','video4linux2','-i','/dev/video0', '-vcodec', 'libvpx', 'test2.avi'])
 
     @recording = true

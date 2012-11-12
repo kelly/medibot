@@ -54,18 +54,26 @@
     }
   });
 
-  Medibot.Models.Sonar = Backbone.Model.extend({
+  Medibot.Models.Scanner = Backbone.Model.extend({
     defaults: {
-      scanner: {
-        steps: 20,
-        range: [0, 180],
-        degrees: 0
-      },
-      ping: {
-        distance: 0,
-        min: 0,
-        max: 140
-      }
+      steps: 20,
+      range: [0, 180],
+      degrees: 0
+    }
+  });
+
+  Medibot.Models.Ping = Backbone.Model.extend({
+    ping: {
+      distance: 0,
+      min: 0,
+      max: 140
+    }
+  });
+
+  Medibot.Models.Sonar = Backbone.Model.extend({
+    initialize: function() {
+      this.set(scanner, new Medibot.Models.Scanner);
+      return this.set(ping, new Medibot.Models.Ping);
     }
   });
 
@@ -461,12 +469,7 @@
       this.joystick = new Medibot.Models.Joystick;
       this.motorLeft = new Medibot.Models.Motor;
       this.motorRight = new Medibot.Models.Motor;
-      this.sonar = new Medibot.Models.Sonar({
-        ping: {
-          min: 0,
-          max: 140
-        }
-      });
+      this.sonar = new Medibot.Models.Sonar;
       this.notifications = new Medibot.Collections.Notifications;
       return Medibot.socket.on('read', function(data) {
         _this.battery.set(data.battery);
@@ -730,8 +733,8 @@
       var ping, point, scanner;
       scanner = this.model.get('scanner');
       ping = this.model.get('ping');
-      if (ping.distance < ping.max) {
-        point = this.paper.rect((ping.distance / ping.max) * this.options.radius, this.center - this.options.lineWidth, 5, 5).rotate(scanner.degrees, this.center, this.center - this.options.lineWidth).attr({
+      if (ping.get('distance') < ping.get('max')) {
+        point = this.paper.rect((ping.get('distance') / ping.get('max')) * this.options.radius, this.center - this.options.lineWidth, 5, 5).rotate(scanner.get('degrees'), this.center, this.center - this.options.lineWidth).attr({
           fill: this.colors.highlight,
           stroke: false
         });
@@ -751,7 +754,7 @@
         });
       });
       return this.beam.animate({
-        transform: "R" + scanner.degrees + "," + this.center + "," + (this.center - this.options.lineWidth)
+        transform: "R" + (scanner.get('degrees')) + "," + this.center + "," + (this.center - this.options.lineWidth)
       }, 1000);
     };
 
@@ -760,8 +763,8 @@
       Sonar.__super__.render.apply(this, arguments);
       this.paper.setSize(this.center * 2, this.center);
       scanner = this.model.get('scanner');
-      range = scanner.range;
-      steps = scanner.steps;
+      range = scanner.get('range');
+      steps = scanner.get('steps');
       this.beam = this.paper.sector(this.center, this.center - this.options.lineWidth, this.options.radius, range[1] - steps, range[1]).attr({
         fill: this.colors.transparent,
         stroke: false
