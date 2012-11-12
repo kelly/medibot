@@ -641,10 +641,9 @@
     };
 
     Joystick.prototype.sourceChange = function(evt) {
-      this.model.set({
+      return this.model.set({
         sourceOn: $('.buttons li').index($(evt.target).parent())
       });
-      return console.log('clicked');
     };
 
     Joystick.prototype.render = function() {

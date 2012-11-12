@@ -51,13 +51,13 @@ class Motors extends EventEmitter
     else
       left: speed - diff, right: speed
     # speed inverted
-    if pos.y > 0
-      motors.left *= -1
-      motors.right *= -1 
+    # if pos.y < 0
+    #   motors.left *= -1
+    #   motors.right *= -1 
 
     @move motors.right, motors.left
 
-    @timer = setTimeout ->
+    @timer = setTimeout =>
       @decelerate()
     , 1000
 

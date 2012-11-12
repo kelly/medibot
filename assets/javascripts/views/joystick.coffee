@@ -63,7 +63,6 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
 
   sourceChange: (evt) ->
     @model.set(sourceOn: $('.buttons li').index $(evt.target).parent())
-    console.log 'clicked'
 
   render: ->
     super
