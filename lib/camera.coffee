@@ -17,7 +17,7 @@ class Camera extends EventEmitter
     #@ffserver = spawn('ffserver', ['-f', 'config/ffserver.conf'])
 
   control: (pos) ->
-    @pan.move (pos.x * 90) + 90
+    @pan.move 180 - ((pos.x * 90) + 90)
     @tilt.move 180 - ((pos.y * 90) + 90)
 
   record: ->
