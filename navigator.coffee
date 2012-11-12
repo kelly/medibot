@@ -44,9 +44,6 @@ board.on "ready", ->
     bot.start()
     bot.camera.record()
 
-    client.on 'drive', ->
-      bot.drive()
-
     bot.on 'read', ->
       client.emit 'read', bot.last
     

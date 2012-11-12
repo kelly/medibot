@@ -63,13 +63,13 @@ class Bot extends EventEmitter
         @heading = (@heading + @compass.heading) / 2
 
     # emit current sensor readings
-    @loop 200, =>
+    @loop 400, =>
       @_read()
 
   drive: (control) ->
-    # @_status "moving #{direction}"
-    # if speed then @motors.setSpeed speed
-    # @motors.go direction
+    @_status "moving #{direction}"
+    if speed then @motors.setSpeed speed
+    @motors.go direction
   
   turn: (heading) ->
     @motors.turn 'heading'

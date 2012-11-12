@@ -94,6 +94,7 @@ Medibot.Views.RaphaelBase = Backbone.View.extend
 
   resize: (width, height) ->
     @paper.clear()
+    @remove()
     @options.width = width
     @options.height = height
     @render()

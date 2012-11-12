@@ -33,7 +33,8 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
     # , @options.frequency
 
   added: =>
-    @resize @$parent.width(), @$parent.height()
+    $video = $('.video')
+    @resize $video.width(), $video.height()
 
   move: (dx, dy) =>
 
@@ -67,6 +68,7 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
     $('.joystick').livequery @added
 
     sources = @model.get 'sources'
+
     @$el.append "<ul class='buttons'><li><a href='#' class='button #{sources[0]}-button'>
                  #{sources[0]}</a></li><li><a href='#' class='button #{sources[1]}-button'>#{sources[1]}</a></li></ul>"
 

@@ -71,6 +71,10 @@
   });
 
   Medibot.Models.Sonar = Backbone.Model.extend({
+    defaults: {
+      ping: {},
+      scanner: {}
+    },
     initialize: function() {
       var _this = this;
       this.set('scanner', new Medibot.Models.Scanner);
@@ -247,6 +251,7 @@
     },
     resize: function(width, height) {
       this.paper.clear();
+      this.remove();
       this.options.width = width;
       this.options.height = height;
       return this.render();
@@ -601,7 +606,9 @@
     };
 
     Joystick.prototype.added = function() {
-      return this.resize(this.$parent.width(), this.$parent.height());
+      var $video;
+      $video = $('.video');
+      return this.resize($video.width(), $video.height());
     };
 
     Joystick.prototype.move = function(dx, dy) {
