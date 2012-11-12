@@ -26,6 +26,7 @@
         last = this.get('last');
         sens = this.get('sensitivity');
         pos = this.get('pos');
+        console.log(this.source());
         if ((pos.x < last.x - sens) || (pos.y < last.y - sens) || (pos.x > last.x + sens) || (pos.y > last.y + sens)) {
           Medibot.socket.emit("" + (this.source()) + ":move", pos);
           return this.set('last', pos);
