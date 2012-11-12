@@ -72,8 +72,8 @@
 
   Medibot.Models.Sonar = Backbone.Model.extend({
     initialize: function() {
-      this.set('scanner', new Medibot.Models.Scanner());
-      return this.set('ping', new Medibot.Models.Ping());
+      this.set('scanner', new Medibot.Models.Scanner);
+      return this.set('ping', new Medibot.Models.Ping);
     }
   });
 
@@ -493,13 +493,6 @@
       this.renderChild(new Medibot.Views.NotificationFooter({
         collection: this.notifications
       }));
-      this.renderChild(new Medibot.Views.Sonar({
-        model: this.sonar,
-        lineWidth: 1,
-        radius: 90,
-        digit: false,
-        label: 'Sonar'
-      }), this.$toolbar);
       this.renderChild(new Medibot.Views.BlockGraph({
         model: this.motorLeft,
         height: 20,

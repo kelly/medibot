@@ -48,8 +48,8 @@ Medibot.Models.Ping = Backbone.Model.extend
 Medibot.Models.Sonar = Backbone.Model.extend
 
   initialize: ->
-    @set 'scanner', new Medibot.Models.Scanner()
-    @set 'ping', new Medibot.Models.Ping()
+    @set('scanner', new Medibot.Models.Scanner)
+    @set('ping', new Medibot.Models.Ping)
 
 Medibot.Models.Notification = Backbone.Model.extend
   defaults:

@@ -39,13 +39,13 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     @renderChild new Medibot.Views.NotificationFooter 
       collection: @notifications
 
-    @renderChild new Medibot.Views.Sonar(
-      model: @sonar
-      lineWidth: 1
-      radius: 90
-      digit: false
-      label: 'Sonar'
-    ), @$toolbar
+    # @renderChild new Medibot.Views.Sonar(
+    #   model: @sonar
+    #   lineWidth: 1
+    #   radius: 90
+    #   digit: false
+    #   label: 'Sonar'
+    # ), @$toolbar
 
     @renderChild new Medibot.Views.BlockGraph(
       model: @motorLeft
