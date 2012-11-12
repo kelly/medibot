@@ -13,7 +13,7 @@ class Sonar extends EventEmitter
 
     pins = opts.pins || [12, 4]
     @scanner = new five.Servo pins[0]
-    @ping = new five.Ping pins[1]
+    @ping = new five.Ping pins[1], freq: 300
     @steps = opts.steps || 20
     @min = opts.min || 10
 
