@@ -26,7 +26,6 @@
         last = this.get('last');
         sens = this.get('sensitivity');
         pos = this.get('pos');
-        console.log(this.source());
         if ((pos.x < last.x - sens) || (pos.y < last.y - sens) || (pos.x > last.x + sens) || (pos.y > last.y + sens)) {
           Medibot.socket.emit("" + (this.source()) + ":move", pos);
           return this.set('last', pos);
@@ -642,9 +641,10 @@
     };
 
     Joystick.prototype.sourceChange = function(evt) {
-      return this.model.set({
+      this.model.set({
         sourceOn: $('.buttons li').index($(evt.target).parent())
       });
+      return console.log($('.buttons li').index($(evt.target).parent()));
     };
 
     Joystick.prototype.render = function() {
