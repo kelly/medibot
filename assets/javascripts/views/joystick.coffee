@@ -68,7 +68,7 @@ class Medibot.Views.Joystick extends Medibot.Views.RaphaelBase
   render: ->
     super
 
-    if $('.joystick') then @remove()
+    # if $('.joystick') then @remove()
 
     sources = @model.get 'sources'
 

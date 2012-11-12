@@ -650,9 +650,6 @@
     Joystick.prototype.render = function() {
       var sources;
       Joystick.__super__.render.apply(this, arguments);
-      if ($('.joystick')) {
-        this.remove();
-      }
       sources = this.model.get('sources');
       this.$el.append("<ul class='buttons'><li><a href='#' class='button " + sources[0] + "-button'>                 " + sources[0] + "</a></li><li><a href='#' class='button " + sources[1] + "-button'>" + sources[1] + "</a></li></ul>");
       this.bg = this.paper.rect(0, 0, this.options.width, this.options.height).attr({
