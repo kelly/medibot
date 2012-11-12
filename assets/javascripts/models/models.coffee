@@ -40,14 +40,12 @@ Medibot.Models.Scanner = Backbone.Model.extend
     degrees: 0
 
 Medibot.Models.Ping = Backbone.Model.extend
-  ping:
+  defaults:
     distance: 0
     min: 0
     max: 140
 
 Medibot.Models.Sonar = Backbone.Model.extend
-  scanner: {}
-  ping: {}
 
   initialize: ->
     @set 'scanner', new Medibot.Models.Scanner()
