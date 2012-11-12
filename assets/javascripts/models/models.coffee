@@ -46,9 +46,12 @@ Medibot.Models.Ping = Backbone.Model.extend
     max: 140
 
 Medibot.Models.Sonar = Backbone.Model.extend
+  scanner: {}
+  ping: {}
+
   initialize: ->
-    this.set scanner, new Medibot.Models.Scanner
-    this.set ping, new Medibot.Models.Ping
+    this.set 'scanner', new Medibot.Models.Scanner
+    this.set 'ping', new Medibot.Models.Ping
 
 Medibot.Models.Notification = Backbone.Model.extend
   defaults:

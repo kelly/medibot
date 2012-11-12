@@ -71,9 +71,11 @@
   });
 
   Medibot.Models.Sonar = Backbone.Model.extend({
+    scanner: {},
+    ping: {},
     initialize: function() {
-      this.set(scanner, new Medibot.Models.Scanner);
-      return this.set(ping, new Medibot.Models.Ping);
+      this.set('scanner', new Medibot.Models.Scanner);
+      return this.set('ping', new Medibot.Models.Ping);
     }
   });
 
