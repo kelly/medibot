@@ -8,7 +8,7 @@
 
   Medibot.Models.Joystick = Backbone.Model.extend({
     defaults: {
-      sensitivity: 0.05,
+      sensitivity: 0.02,
       sources: ['camera', 'motors'],
       sourceOn: 0,
       last: {

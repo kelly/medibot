@@ -30,25 +30,26 @@ class Bot extends EventEmitter
       @stop()
       @_status 'warning: low power: #{@value}'
 
-    @sonar.on 'warning', =>
-      if @motors.isMoving 
-        @motors.stop()
-        @sonar.scan()
+    if @autonomous 
+      @sonar.on 'warning', =>
+        if @motors.isMoving 
+          @motors.stop()
+          @sonar.scan()
 
-    @sonar.on 'scanned', =>
-      ping = _.max @sonar.sweep, (ping) ->
-        ping.distance
+      @sonar.on 'scanned', =>
+        ping = _.max @sonar.sweep, (ping) ->
+          ping.distance
 
-      heading = @heading
-      heading -= 90 - ping.degrees
-      if heading > 360 
-        heading = heading - 360 
-      else if heading < 0
-        heading = 360 + heading
+        heading = @heading
+        heading -= 90 - ping.degrees
+        if heading > 360 
+          heading = heading - 360 
+        else if heading < 0
+          heading = 360 + heading
 
-      console.log "current heading: #{@heading}, new heading: #{heading}"
+        console.log "current heading: #{@heading}, new heading: #{heading}"
 
-      @turn heading
+        @turn heading
 
   start: ->
     
@@ -65,12 +66,12 @@ class Bot extends EventEmitter
     # emit current sensor readings
     setInterval =>
       @_read()
-    , 400
+    , 300
 
-  drive: (control) ->
-    @_status "moving #{direction}"
-    if speed then @motors.setSpeed speed
-    @motors.go direction
+  # drive: (control) ->
+  #   @_status "moving #{direction}"
+  #   if speed then @motors.setSpeed speed
+  #   @motors.go direction
   
   turn: (heading) ->
     @motors.turn 'heading'
