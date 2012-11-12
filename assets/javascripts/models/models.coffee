@@ -51,6 +51,10 @@ Medibot.Models.Sonar = Backbone.Model.extend
     @set('scanner', new Medibot.Models.Scanner)
     @set('ping', new Medibot.Models.Ping)
 
+    @get('scanner').on 'change', => @trigger('change')
+    @get('ping').on 'change', => @trigger('change')
+
+
 Medibot.Models.Notification = Backbone.Model.extend
   defaults:
     body: ''

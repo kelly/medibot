@@ -72,8 +72,15 @@
 
   Medibot.Models.Sonar = Backbone.Model.extend({
     initialize: function() {
+      var _this = this;
       this.set('scanner', new Medibot.Models.Scanner);
-      return this.set('ping', new Medibot.Models.Ping);
+      this.set('ping', new Medibot.Models.Ping);
+      this.get('scanner').on('change', function() {
+        return _this.trigger('change');
+      });
+      return this.get('ping').on('change', function() {
+        return _this.trigger('change');
+      });
     }
   });
 
@@ -473,6 +480,8 @@
       this.notifications = new Medibot.Collections.Notifications;
       return Medibot.socket.on('read', function(data) {
         _this.battery.set(data.battery);
+        _this.sonar.get('ping').set(data.sonar.ping);
+        _this.sonar.get('scanner').set(data.sonar.scanner);
         _this.motorLeft.set('value', data.motors.left);
         return _this.motorRight.set('value', data.motors.right);
       });
@@ -491,6 +500,13 @@
       this.renderChild(new Medibot.Views.NotificationFooter({
         collection: this.notifications
       }));
+      this.renderChild(new Medibot.Views.Sonar({
+        model: this.sonar,
+        lineWidth: 1,
+        radius: 90,
+        digit: false,
+        label: 'Sonar'
+      }), this.$toolbar);
       this.renderChild(new Medibot.Views.BlockGraph({
         model: this.motorLeft,
         height: 20,

@@ -12,13 +12,13 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     @joystick      = new Medibot.Models.Joystick
     @motorLeft     = new Medibot.Models.Motor
     @motorRight    = new Medibot.Models.Motor
-    # @sonar         = new Medibot.Models.Sonar
+    @sonar         = new Medibot.Models.Sonar
     @notifications = new Medibot.Collections.Notifications
 
     Medibot.socket.on 'read', (data) =>
       @battery.set(data.battery)
-      # @sonar.get('ping').set(data.sonar.ping)
-      # @sonar.get('scanner').set(data.sonar.scanner)
+      @sonar.get('ping').set(data.sonar.ping)
+      @sonar.get('scanner').set(data.sonar.scanner)
       @motorLeft.set('value', data.motors.left)
       @motorRight.set('value', data.motors.right)
 
@@ -39,13 +39,13 @@ class Medibot.Views.Hud extends Medibot.Views.Base
     @renderChild new Medibot.Views.NotificationFooter 
       collection: @notifications
 
-    # @renderChild new Medibot.Views.Sonar(
-    #   model: @sonar
-    #   lineWidth: 1
-    #   radius: 90
-    #   digit: false
-    #   label: 'Sonar'
-    # ), @$toolbar
+    @renderChild new Medibot.Views.Sonar(
+      model: @sonar
+      lineWidth: 1
+      radius: 90
+      digit: false
+      label: 'Sonar'
+    ), @$toolbar
 
     @renderChild new Medibot.Views.BlockGraph(
       model: @motorLeft
