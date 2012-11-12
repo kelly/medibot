@@ -43,7 +43,6 @@ class Motors extends EventEmitter
 
   control: (pos) ->
     clearTimeout(@timer)
-    console.log pos
     speed = Math.abs(pos.y * 255) 
     diff = Math.abs(pos.x * speed)
     motors = if pos.x < 0 
@@ -55,7 +54,8 @@ class Motors extends EventEmitter
       motors.left *= -1
       motors.right *= -1 
 
-    @move motors.right, motors.left
+    # these are flipped too on purpose
+    @move motors.left, motors.right
 
     @timer = setTimeout =>
       @decelerate()
