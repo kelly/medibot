@@ -50,10 +50,9 @@ class Motors extends EventEmitter
       left: speed, right: speed - diff
     else
       left: speed - diff, right: speed
-    # speed inverted
-    # if pos.y < 0
-    #   motors.left *= -1
-    #   motors.right *= -1 
+    #speed inverted
+    motors.left *= -1
+    motors.right *= -1 
 
     @move motors.right, motors.left
 
