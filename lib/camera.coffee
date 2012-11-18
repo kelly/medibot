@@ -19,10 +19,10 @@ class Camera extends EventEmitter
   control: (dir, end) ->
     unless end 
       switch dir
-        when 'top'    then @tilt.move 180
-        when 'bottom' then @tilt.move 0
-        when 'left'   then @pan.move 0
-        when 'right'  then @pan.move 180
+        when 'top'    then @tilt.move @tilt.range[0]
+        when 'bottom' then @tilt.move @tilt.range[1]
+        when 'left'   then @pan.move 180
+        when 'right'  then @pan.move 0
     else
       if (dir == 'top' || dir == 'bottom') then @tilt.stop() else @pan.stop()
 
