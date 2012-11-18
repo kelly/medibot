@@ -473,22 +473,69 @@
 
     Hud.prototype.initialize = function() {
       var _this = this;
-      Medibot.socket = io.connect('http://192.168.0.192');
+      Medibot.socket = io.connect('http://192.168.0.196');
       this.battery = new Medibot.Models.Sensor({
         min: 410,
         max: 565
       });
-      this.joystick = new Medibot.Models.Joystick;
       this.motorLeft = new Medibot.Models.Motor;
       this.motorRight = new Medibot.Models.Motor;
       this.sonar = new Medibot.Models.Sonar;
       this.notifications = new Medibot.Collections.Notifications;
-      return Medibot.socket.on('read', function(data) {
+      Medibot.socket.on('read', function(data) {
         _this.battery.set(data.battery);
         _this.sonar.get('ping').set(data.sonar.ping);
         _this.sonar.get('scanner').set(data.sonar.scanner);
         _this.motorLeft.set('value', data.motors.left);
         return _this.motorRight.set('value', data.motors.right);
+      });
+      if (this.pad = Gamepads.get(0)) {
+        return this.initPad();
+      } else {
+        return this.joystick = new Medibot.Models.Joystick;
+      }
+    };
+
+    Hud.prototype.initPad = function() {
+      var map, normalize,
+        _this = this;
+      normalize = function(axis) {
+        return Math.round(axis * -255);
+      };
+      map = function(button) {
+        var dir;
+        return dir = (function() {
+          switch (button) {
+            case 'BUTTON_12':
+              return 'up';
+            case 'BUTTON_13':
+              return 'down';
+            case 'BUTTON_14':
+              return 'left';
+            case 'BUTTON_15':
+              return 'right';
+          }
+        })();
+      };
+      this.pad.on('buttondown', function(evt) {
+        var dir;
+        if (dir = map(evt.button)) {
+          Medibot.socket.emit("camera:move", dir);
+        }
+        if (evt.button === 'BUTTON_0') {
+          return Medibot.socket.emit("motors:move", [0, 0]);
+        }
+      });
+      this.pad.on('buttonup', function(evt) {
+        var dir;
+        if (dir = map(evt.button)) {
+          return Medibot.socket.emit("camera:move:end", dir);
+        }
+      });
+      return this.pad.on('axismove', function(evt) {
+        if (evt.button === 'AXE_1' || evt.button === 'AXE_3') {
+          return Medibot.socket.emit("motors:move", [normalize(_this.pad.AXE_1), normalize(_this.pad.AXE_3)]);
+        }
       });
     };
 
@@ -532,14 +579,16 @@
         label: "Motor R",
         direction: 'right'
       }), this.$toolbar);
-      this.renderChild(new Medibot.Views.Joystick({
-        model: this.joystick,
-        $parent: this.$video,
-        width: 640,
-        height: 320,
-        lineWidth: 1,
-        digit: false
-      }), this.$video);
+      if (this.joystick) {
+        this.renderChild(new Medibot.Views.Joystick({
+          model: this.joystick,
+          $parent: this.$video,
+          width: 640,
+          height: 320,
+          lineWidth: 1,
+          digit: false
+        }), this.$video);
+      }
       return this;
     };
 

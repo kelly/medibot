@@ -54,7 +54,7 @@ class Motors extends EventEmitter
       motors.left *= -1
       motors.right *= -1 
 
-    # these are flipped too on purpose
+    # these are flipped too
     @move motors.left, motors.right
 
     @timer = setTimeout =>

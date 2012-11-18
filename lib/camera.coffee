@@ -16,9 +16,15 @@ class Camera extends EventEmitter
 
     #@ffserver = spawn('ffserver', ['-f', 'config/ffserver.conf'])
 
-  control: (pos) ->
-    @pan.move 180 - ((pos.x * 90) + 90)
-    @tilt.move 180 - ((pos.y * 90) + 90)
+  control: (dir, end) ->
+    unless end 
+      switch dir
+        when 'top'    then @tilt.move 180
+        when 'bottom' then @tilt.move 0
+        when 'left'   then @pan.move 0
+        when 'right'  then @pan.move 180
+    else
+      if dir == 'top' || dir == 'bottom' then @tilt.stop() else @pan.stop()
 
   record: ->
 

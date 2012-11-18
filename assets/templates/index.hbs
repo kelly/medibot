@@ -13,6 +13,14 @@
 	(function ($) {
 		hud = new Medibot.Views.Hud;
 	  $('#container').append(hud.render().el);
-	})(jQuery);
 
+    updateGamepad = function() {
+      window.requestAnimFrame(updateGamepad);
+      Gamepads.update();
+    }
+    if (Gamepads.supported) {
+      updateGamepad();
+	  }
+  }
+  )(jQuery);
 </script>

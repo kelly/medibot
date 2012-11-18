@@ -47,11 +47,14 @@ board.on "ready", ->
     bot.on 'read', ->
       client.emit 'read', bot.last
     
-    client.on 'motors:move', (pos) ->
-      bot.motors.control pos
+    client.on 'motors:move', (speeds) ->
+      bot.motors.move speeds[0], speeds[1]
 
-    client.on 'camera:move', (pos) ->
-      bot.camera.control pos
+    client.on 'camera:move', (dir) ->
+      bot.camera.control dir
+      
+    client.on 'camera:move:end', (dir) ->
+      bot.camera.control dir, 'end'
 
 # testing code
 # io.sockets.on "connection", (client) ->
@@ -76,14 +79,13 @@ board.on "ready", ->
 #           max: 50
 #     angle += 20
 #   , 1000
-#   client.on 'camera:move', (pos) ->
-#     console.log 'camera: ' + pos.x + ' ' + pos.y
+#   client.on 'camera:move', (dir) ->
+#     console.log 'camera: ' + dir
+  
+#   client.on 'camera:move:end', (dir) ->
+#     console.log 'camera end: ' + dir
 
 #   client.on 'motors:move', (pos) ->
-#     if pos[0] < 0
-#       left = pos[0] * 255
-#     normalized = pos[0]
-
-#     console.log 'motors: ' + pos.x + ' ' + pos.y
+#     console.log 'motors: ' + pos[0] + ' ' + pos[1]
 
 server.listen(3001);
