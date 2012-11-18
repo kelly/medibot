@@ -473,7 +473,7 @@
 
     Hud.prototype.initialize = function() {
       var _this = this;
-      Medibot.socket = io.connect('http://192.168.0.196');
+      Medibot.socket = io.connect('http://192.168.0.192');
       this.battery = new Medibot.Models.Sensor({
         min: 410,
         max: 565
