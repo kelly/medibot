@@ -500,7 +500,7 @@
       var map, normalize,
         _this = this;
       normalize = function(axis) {
-        return Math.round(axis * -255);
+        return Math.round(axis * 255);
       };
       map = function(button) {
         var dir;

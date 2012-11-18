@@ -30,7 +30,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
   initPad: ->
 
     normalize = (axis) ->
-      Math.round axis * -255
+      Math.round axis * 255
 
     map = (button) ->
       dir = 
