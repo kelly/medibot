@@ -19,10 +19,10 @@ class Camera extends EventEmitter
   control: (dir, end) ->
     unless end 
       switch dir
-        when 'up'    then @tilt.move @tilt.range[0]
-        when 'down' then @tilt.move @tilt.range[1]
-        when 'left'   then @pan.move 180
-        when 'right'  then @pan.move 0
+        when 'up'    then @tilt.move @tilt.last.degrees + 10
+        when 'down'  then @tilt.move @tilt.last.degrees - 10
+        when 'left'  then @pan.move @pan.last.degrees + 10
+        when 'right' then @pan.move @pan.last.degrees - 10
     else
       console.log 'stopping'
       if (dir == 'top' || dir == 'bottom') then @tilt.stop() else @pan.stop()
