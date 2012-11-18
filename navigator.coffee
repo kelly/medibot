@@ -48,10 +48,11 @@ board.on "ready", ->
       client.emit 'read', bot.last
     
     client.on 'motors:move', (speeds) ->
-      bot.motors.move speeds[0], speeds[1]
+      # flipped values
+      bot.motors.move speeds[1], speeds[0] 
 
     client.on 'camera:move', (dir) ->
-      bot.camera.control dir
+      bot.camera.control dir, false
       
     client.on 'camera:move:end', (dir) ->
       bot.camera.control dir, 'end'

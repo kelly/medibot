@@ -24,7 +24,7 @@ class Camera extends EventEmitter
         when 'left'   then @pan.move 0
         when 'right'  then @pan.move 180
     else
-      if dir == 'top' || dir == 'bottom' then @tilt.stop() else @pan.stop()
+      if (dir == 'top' || dir == 'bottom') then @tilt.stop() else @pan.stop()
 
   record: ->
 
