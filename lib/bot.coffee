@@ -97,8 +97,8 @@ class Bot extends EventEmitter
           distance: @sonar.ping.inches
       battery: _.pick @battery, 'min', 'max', 'value'
       motors: 
-        left: @motors.left.value
-        right: @motors.right.value
+        left: Math.abs @motors.left.value
+        right: Math.abs @motors.right.value
       compass: @compass.bearing
     
     @history.push @last

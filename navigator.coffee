@@ -55,7 +55,7 @@ board.on "ready", ->
       bot.camera.control dir, false
       
     client.on 'camera:move:end', (dir) ->
-      bot.camera.control dir, 'end'
+      bot.camera.control dir, true
 
 # testing code
 # io.sockets.on "connection", (client) ->
