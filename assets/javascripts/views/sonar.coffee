@@ -9,7 +9,7 @@ class Medibot.Views.Sonar extends Medibot.Views.RaphaelBase
     ping = @model.get('ping')
 
     if ping.get('distance') < ping.get('max') 
-      point = @paper.rect((ping.get('distance') / ping.get('max')) * @options.radius, @center - @options.lineWidth, 5, 5)
+      point = @paper.rect((1 - (ping.get('distance') / ping.get('max'))) * @options.radius, @center - @options.lineWidth, 5, 5)
         .rotate(scanner.get('degrees'), @center, @center - @options.lineWidth)
         .attr 
           fill: @colors.highlight
