@@ -500,7 +500,7 @@
       var map, normalize,
         _this = this;
       normalize = function(axis) {
-        return Math.round(axis * 255);
+        return Math.round(axis * 220);
       };
       map = function(button) {
         var dir;
@@ -799,7 +799,7 @@
       scanner = this.model.get('scanner');
       ping = this.model.get('ping');
       if (ping.get('distance') < ping.get('max')) {
-        point = this.paper.rect((ping.get('distance') / ping.get('max')) * this.options.radius, this.center - this.options.lineWidth, 5, 5).rotate(scanner.get('degrees'), this.center, this.center - this.options.lineWidth).attr({
+        point = this.paper.rect((1 - (ping.get('distance') / ping.get('max'))) * this.options.radius, this.center - this.options.lineWidth, 5, 5).rotate(scanner.get('degrees'), this.center, this.center - this.options.lineWidth).attr({
           fill: this.colors.highlight,
           stroke: false
         });
