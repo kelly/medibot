@@ -6,7 +6,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
   template: Handlebars.templates['hud']
 
   initialize: ->
-    Medibot.socket = io.connect 'http://192.168.0.193'
+    Medibot.socket = io.connect 'http://192.168.0.186'
 
     @battery       = new Medibot.Models.Sensor min: 410, max: 565
     @motorLeft     = new Medibot.Models.Motor
@@ -31,7 +31,7 @@ class Medibot.Views.Hud extends Medibot.Views.Base
 
     normalize = (axis) ->
       # maxing out at 220 instead of 255, just too fast for indoors
-      Math.round axis * 220
+      Math.round(axis * 220)
 
     map = (button) ->
       dir = 

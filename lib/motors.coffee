@@ -14,7 +14,7 @@ class Motors extends EventEmitter
   constructor: (opts) ->
     @right = new five.Motor(pins: opts.right)
     @left = new five.Motor(pins: opts.left)
-    @speed = unless opts.speed then 100 else opts.speed
+    @speed = unless opts.speed then 130 else opts.speed
     @motors = new five.Motors();
 
   move: (right, left) ->
@@ -59,7 +59,7 @@ class Motors extends EventEmitter
 
     @timer = setTimeout =>
       @decelerate()
-    , 1000
+    , 100
 
   status: (type) ->
     @isMoving = false; @isTurning = false

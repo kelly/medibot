@@ -1,6 +1,9 @@
 Medibot
 =======
 
+### FOR SALE! send email for details
+
+
 An arduino nodebot built to play fetch with my dog, Mogwai.
 ---------------------------------------------------
 
@@ -23,22 +26,16 @@ An arduino nodebot built to play fetch with my dog, Mogwai.
 - 1x Pandaboard ES Dual-core ARM A9 w/ 1 GB DDR2 RAM 
 - 1x Microsoft Lifecam Cinema 720p
 - 1x Pololu Step-Down Voltage Regulator (7.2V -> 5V at 3.5A)
-- 2x Breadboard Mini Self-Adhesive 1.8"x1.4"
+- 1x Breadboard Mini Self-Adhesive 1.8"x1.4"
 - 1x Parallax PING))) Ultrasonic Sensor
 - 1x Jameco PING Mounting Kit with Parallax Servo
 - 1x Atmel Inertial One Sensor Board 
 	- 3d magnetometer AK8975
 	- 3d accelerometer BMA150
 	- 3d gyroscope ITG-3200
-- 1x Teensy ATmega32U4 (not hooked up. For sensors?)
 - 1x Low Dropout Regulator 3.3 Volt LM1117T-3.3
 - 1x DFRobot Pan/Tilt Servo Kit (5kg)
 - 1x Sparkfun Logic Converter
-
-### Retired 
-
-- 1x Linksys WRT-54G router (used for wireless serial communication)
-- 1x Raspberry Pi (ordered a Pandaboard while waiting for it arrive)
 
 ### Todo
 

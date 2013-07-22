@@ -2,7 +2,7 @@ Medibot.Models ||= {}
 
 Medibot.Models.Joystick = Backbone.Model.extend
   defaults:
-    sensitivity: 0.02
+    sensitivity: 0.01
     sources: ['camera', 'motors']
     sourceOn: 0
     last:
@@ -14,14 +14,17 @@ Medibot.Models.Joystick = Backbone.Model.extend
 
   initialize: ->
 
-    @on 'change', ->
+    @on 'change:pos', ->
       last = @get('last')
       sens = @get('sensitivity')
       pos = @get('pos')
 
-      if (pos.x < last.x - sens) || (pos.y < last.y - sens) || (pos.x > last.x + sens) || (pos.y > last.y + sens)
-        Medibot.socket.emit "#{@source()}:move", pos
-        @set('last', pos)
+      Medibot.socket.emit "#{@source()}:move", pos
+      @set('last', pos)
+
+      # if (pos.x < last.x - sens) || (pos.y < last.y - sens) || (pos.x > last.x + sens) || (pos.y > last.y + sens)
+      #   Medibot.socket.emit "#{@source()}:move", pos
+      #   @set('last', pos)
 
   source: ->
     @get('sources')[@get('sourceOn')]

@@ -54,6 +54,7 @@ class Bot extends EventEmitter
   start: ->
     
     five.Servos().center()
+    @camera.record()
 
     if @autonomous
       # kick things off with a sonar scan

@@ -8,7 +8,7 @@
 
   Medibot.Models.Joystick = Backbone.Model.extend({
     defaults: {
-      sensitivity: 0.02,
+      sensitivity: 0.01,
       sources: ['camera', 'motors'],
       sourceOn: 0,
       last: {
@@ -21,15 +21,13 @@
       }
     },
     initialize: function() {
-      return this.on('change', function() {
+      return this.on('change:pos', function() {
         var last, pos, sens;
         last = this.get('last');
         sens = this.get('sensitivity');
         pos = this.get('pos');
-        if ((pos.x < last.x - sens) || (pos.y < last.y - sens) || (pos.x > last.x + sens) || (pos.y > last.y + sens)) {
-          Medibot.socket.emit("" + (this.source()) + ":move", pos);
-          return this.set('last', pos);
-        }
+        Medibot.socket.emit("" + (this.source()) + ":move", pos);
+        return this.set('last', pos);
       });
     },
     source: function() {
@@ -473,7 +471,7 @@
 
     Hud.prototype.initialize = function() {
       var _this = this;
-      Medibot.socket = io.connect('http://192.168.0.193');
+      Medibot.socket = io.connect('http://192.168.0.186');
       this.battery = new Medibot.Models.Sensor({
         min: 410,
         max: 565

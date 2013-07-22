@@ -114,7 +114,6 @@ Medibot.Views.RaphaelBase = Backbone.View.extend
       @$el.append '<p class="digit">0</p>'
       @$digit = @$('.digit')  
 
-    # from http://stackoverflow.com/questions/5061318/drawing-centered-arcs-in-raphael-js
     @paper.customAttributes.arc = (cx, cy, value, total, R) ->
       alpha = 360 / total * value
       a = (90 - alpha) * Math.PI / 180
