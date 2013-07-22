@@ -1,7 +1,7 @@
 Medibot
 =======
 
-### FOR SALE! send email for details
+### ROBOT FOR SALE! send email for details
 
 
 An arduino nodebot built to play fetch with my dog, Mogwai.
